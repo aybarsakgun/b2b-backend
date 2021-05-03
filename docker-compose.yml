@@ -1,0 +1,18 @@
+version: "3"
+
+services:
+  mysql:
+    image: mysql:5.7
+    command: ['--character-set-server=utf8mb4', '--collation-server=utf8mb4_unicode_ci','--default-authentication-plugin=mysql_native_password', '--sql_mode=']
+    environment:
+      MYSQL_DATABASE: b2b
+      MYSQL_ROOT_PASSWORD: b2b
+    ports:
+      - 3306:3306
+    volumes:
+      - ./mysql-scripts:/docker-entrypoint-initdb.d
+      - ./mysql:/var/lib/mysql
+    networks:
+      - nestjs
+networks:
+  nestjs:
