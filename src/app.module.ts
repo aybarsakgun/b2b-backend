@@ -23,7 +23,7 @@ import { UsersModule } from "./users/users.module";
       exclude: ["/auth/*", "/graphql"],
     }),
     AuthModule,
-    UsersModule,
+    UsersModule
   ],
 })
 export class AppModule {}

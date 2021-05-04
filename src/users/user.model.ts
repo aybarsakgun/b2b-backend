@@ -18,7 +18,7 @@ registerEnumType(UserRole, {
 @ObjectType()
 @Entity()
 export class User extends BaseModel implements IUser {
-  @Field((type) => ID)
+  @Field(() => ID)
   @PrimaryGeneratedColumn("uuid")
   id: string;
 

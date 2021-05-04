@@ -44,10 +44,23 @@ type SignInResult {
   user: User!
 }
 
+type UserPaginatedResult {
+  total: Int
+  totalPage: Int
+  page: Int
+  limit: Int
+  items: [User!]!
+}
+
 type Query {
   user(id: ID!): User!
   me: User!
-  users(search: String, role: UserRole, ids: [ID!], withDeleted: Boolean): [User!]!
+  users(pagination: PaginationInput): UserPaginatedResult!
+}
+
+input PaginationInput {
+  page: Int = 1
+  limit: Int = 10
 }
 
 type Mutation {

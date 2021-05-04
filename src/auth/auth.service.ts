@@ -1,12 +1,12 @@
-import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
-import { JwtService } from "@nestjs/jwt";
-import { InjectRepository } from "@nestjs/typeorm";
-import { UserRepository } from "../users/user.repository";
-import { SignInInput } from "./dto/sign-in.input";
-import { Md5 } from "ts-md5";
-import { SignInResult } from "./dto/sign-in-result";
-import { JWTPayload } from "./jwt.strategy";
-import { User } from "../users/user.model";
+import {HttpException, HttpStatus, Injectable} from "@nestjs/common";
+import {JwtService} from "@nestjs/jwt";
+import {InjectRepository} from "@nestjs/typeorm";
+import {UserRepository} from "../users/user.repository";
+import {SignInInput} from "./dto/sign-in.input";
+import {Md5} from "ts-md5";
+import {SignInResult} from "./dto/sign-in-result";
+import {User} from "../users/user.model";
+import {IJwtPayload} from "../common/interfaces";
 
 @Injectable()
 export class AuthService {
@@ -15,6 +15,10 @@ export class AuthService {
     private readonly userRepository: UserRepository,
     private readonly jwtService: JwtService
   ) {}
+
+  async validateUser(payload: IJwtPayload): Promise<User> {
+    return await this.userRepository.findOne(payload.id);
+  }
 
   async signIn({ email, password }: SignInInput): Promise<SignInResult> {
     const user: User = await this.userRepository.findOne({ email });
@@ -27,12 +31,10 @@ export class AuthService {
       throw new HttpException("Invalid credentials.", HttpStatus.UNAUTHORIZED);
     }
 
-    const payload: JWTPayload = {
-      id: user.id,
-    };
-
     return {
-      token: this.jwtService.sign(payload),
+      token: this.jwtService.sign({
+        id: user.id
+      }),
       user: user,
     };
   }
