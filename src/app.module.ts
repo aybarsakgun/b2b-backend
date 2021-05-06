@@ -26,18 +26,10 @@ import {AnyExceptionFilter} from "./common/filters/exception.filter";
         }
       })
     },
-    // {
-    //   provide: APP_PIPE,
-    //   useClass: CustomValidationPipe,
-    // },
     {
       provide: APP_FILTER,
       useClass: AnyExceptionFilter
     },
-    // {
-    //   provide: APP_INTERCEPTOR,
-    //   useValue: new ClassSerializerInterceptor(new Reflector())
-    // },
     {
       provide: APP_GUARD,
       useClass: JwtAuthGuard

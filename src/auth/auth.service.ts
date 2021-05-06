@@ -19,7 +19,7 @@ export class AuthService {
   async validateUser(payload: IJwtPayload): Promise<User> {
     return await this.userRepository.findOne(payload.id);
   }
-  
+
   async signIn({ email, password }: SignInInput): Promise<SignInResult> {
     const user: User = await this.userRepository.findOne({ email });
 

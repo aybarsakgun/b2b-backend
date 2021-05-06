@@ -1,6 +1,5 @@
 import {ArgumentsHost, Catch, ExceptionFilter, HttpException} from '@nestjs/common';
 import {GqlExceptionFilter} from '@nestjs/graphql';
-import {ValidationError} from "class-validator";
 
 @Catch(HttpException)
 export class AnyExceptionFilter implements ExceptionFilter, GqlExceptionFilter {
@@ -8,11 +7,11 @@ export class AnyExceptionFilter implements ExceptionFilter, GqlExceptionFilter {
     const statusCode = exception.getStatus();
     if (host.getType() === 'http') {
       const response = host.switchToHttp().getResponse();
-      const exceptionResponse = exception.getResponse();
+      const exceptionResponse: any = exception.getResponse();
       response.status(statusCode).json(<any>{
         statusCode,
         timestamp: new Date().toISOString(),
-        messages: exceptionResponse.hasOwnProperty('message') ? exceptionResponse['message'] : [exceptionResponse]
+        messages: exceptionResponse.message ? Array.isArray(exceptionResponse.message) ? exceptionResponse['message'] : [exceptionResponse['message']] : [exceptionResponse]
       });
     }
   }
