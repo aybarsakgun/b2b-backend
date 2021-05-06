@@ -1,11 +1,11 @@
 import {Args, Query, Resolver} from "@nestjs/graphql";
-import {UserId} from "../common/decorators";
-import {GetUserArgs} from "./dto/get-user.args";
+import {GetUserArgs} from "./types/get-user.args";
 import {User} from "./user.model";
 import {UsersService} from "./users.service";
-import {PaginationInput} from "../modules/pagination/dto/pagination.input";
-import {UserPaginatedResult} from "./dto/user-paginated.result";
+import {PaginationInput} from "../modules/pagination/types/pagination.input";
+import {UserPaginatedResult} from "./types/user-paginated.result";
 import {IPaginationResult} from "../modules/pagination/interfaces/pagination-result.interface";
+import {CurrentUser} from "../common/decorators";
 
 @Resolver(() => User)
 export class UsersResolver {
@@ -17,9 +17,9 @@ export class UsersResolver {
     return this.usersService.findById(args.id);
   }
 
-  @Query(() => User, {name: "me"})
-  async getMe(@UserId() userId: string): Promise<User> {
-    return this.usersService.findById(userId);
+  @Query(() => User, {name: "me", nullable: true})
+  async getMe(@CurrentUser() user: User): Promise<User> {
+    return this.usersService.findById(user?.id);
   }
 
   @Query(() => UserPaginatedResult, {name: "users"})

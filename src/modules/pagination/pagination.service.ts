@@ -27,11 +27,6 @@ export class PaginationService {
 
     const {limit, page} = paginationInput;
 
-    const items = await queryBuilder
-      .take(limit)
-      .skip((page - 1) * limit)
-      .getMany();
-
     let query = queryBuilder.getQuery();
     const parameters = queryBuilder.getParameters();
     if (Object.values(parameters).length) {
@@ -50,6 +45,11 @@ export class PaginationService {
     const countResult = await this.entityManager.connection.query(countQuery);
 
     const total = +countResult[0].count;
+
+    const items = await queryBuilder
+      .take(limit)
+      .skip((page - 1) * limit)
+      .getMany();
 
     return Promise.resolve({
       total,

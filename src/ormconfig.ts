@@ -1,6 +1,6 @@
 import path from "path";
 import { ConnectionOptions } from "typeorm";
-
+import { SnakeNamingStrategy } from "typeorm-naming-strategies";
 import { env } from "./common/env";
 
 const typeOrmConfig: ConnectionOptions = {
@@ -18,6 +18,7 @@ const typeOrmConfig: ConnectionOptions = {
   cli: {
     migrationsDir: "src/common/migrations",
   },
+  namingStrategy: new SnakeNamingStrategy()
 };
 
 export = typeOrmConfig;

@@ -1,25 +1,19 @@
-import {
-  CanActivate,
-  ExecutionContext,
-  Injectable,
-  UseGuards,
-} from "@nestjs/common";
-import { GqlExecutionContext } from "@nestjs/graphql";
-import { getRepository } from "typeorm";
-import { User, UserRole } from "../../users/user.model";
-import {IJwtPayload} from "../interfaces/jwt-payload.interface";
+import {CanActivate, ExecutionContext, Injectable, UseGuards,} from "@nestjs/common";
+import {getRepository} from "typeorm";
+import {User, UserRole} from "../../users/user.model";
+import {getRequest} from "../utils/get-request";
 
 @Injectable()
 export class IsAdmin implements CanActivate {
   async canActivate(context: ExecutionContext): Promise<boolean> {
-    const ctx = GqlExecutionContext.create(context).getContext();
-    const payload: IJwtPayload = ctx.req?.user;
+    const req = getRequest(context);
+    const user: User = req.user;
 
-    if (!payload) {
+    if (!user) {
       return false;
     }
 
-    const userRecord = await getRepository(User).findOne(payload.id);
+    const userRecord = await getRepository(User).findOne(user.id);
 
     return userRecord.role === UserRole.ADMIN;
   }

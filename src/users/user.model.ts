@@ -1,10 +1,9 @@
-import { Field, ID, ObjectType, registerEnumType } from "@nestjs/graphql";
-import { Exclude } from "class-transformer";
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
-import { SalesRepresentative } from "./sales-representative/sales-representative.model";
-import { IUser } from "./interfaces/user.interface";
-import { IsEmail } from "class-validator";
-import { BaseModel } from "../common/models";
+import {Field, ID, ObjectType, registerEnumType} from "@nestjs/graphql";
+import {Column, Entity, JoinTable, ManyToOne, OneToMany, PrimaryGeneratedColumn} from "typeorm";
+import {SalesRepresentative} from "./sales-representative/sales-representative.model";
+import {IUser} from "./interfaces/user.interface";
+import {BaseModel} from "../common/models";
+import {UserBranch} from "./user-branch/user-branch.model";
 
 export enum UserRole {
   ADMIN = "ADMIN",
@@ -27,11 +26,9 @@ export class User extends BaseModel implements IUser {
   username: string;
 
   @Column({ length: 64 })
-  @Exclude()
   password: string;
 
   @Field()
-  @IsEmail()
   @Column({ length: 255 })
   email: string;
 
@@ -55,12 +52,12 @@ export class User extends BaseModel implements IUser {
   @Column()
   isActive: boolean;
 
-  // @Field(() => [CustomerBranch])
-  // @OneToMany(() => CustomerBranch, customerBranch => customerBranch.users)
-  // customerBranches: CustomerBranch[];
+  @Field(() => [UserBranch])
+  @OneToMany(() => UserBranch, UserBranch => UserBranch.user, {cascade: true})
+  branches: UserBranch[];
 
   @Field(() => SalesRepresentative, { nullable: true })
-  @ManyToOne(() => SalesRepresentative)
+  @ManyToOne(() => SalesRepresentative, {cascade: true})
   salesRepresentative: SalesRepresentative;
 
   @Field({ nullable: true })
@@ -70,4 +67,9 @@ export class User extends BaseModel implements IUser {
   @Field({ nullable: true })
   @Column({ default: null, nullable: true })
   branch: number;
+
+  constructor(partial: Partial<User> = {}) {
+    super();
+    Object.assign(this, partial);
+  }
 }

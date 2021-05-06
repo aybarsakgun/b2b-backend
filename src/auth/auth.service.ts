@@ -2,9 +2,9 @@ import {HttpException, HttpStatus, Injectable} from "@nestjs/common";
 import {JwtService} from "@nestjs/jwt";
 import {InjectRepository} from "@nestjs/typeorm";
 import {UserRepository} from "../users/user.repository";
-import {SignInInput} from "./dto/sign-in.input";
+import {SignInInput} from "./types/sign-in.input";
 import {Md5} from "ts-md5";
-import {SignInResult} from "./dto/sign-in-result";
+import {SignInResult} from "./types/sign-in-result";
 import {User} from "../users/user.model";
 import {IJwtPayload} from "../common/interfaces";
 
@@ -19,7 +19,7 @@ export class AuthService {
   async validateUser(payload: IJwtPayload): Promise<User> {
     return await this.userRepository.findOne(payload.id);
   }
-
+  
   async signIn({ email, password }: SignInInput): Promise<SignInResult> {
     const user: User = await this.userRepository.findOne({ email });
 

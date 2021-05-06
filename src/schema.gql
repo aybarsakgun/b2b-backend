@@ -7,15 +7,24 @@ type SalesRepresentative {
   updatedAt: DateTime!
   deletedAt: DateTime
   id: Float!
-  name: String!
-  phone: String!
-  email: String!
+  name: String
+  phone: String
+  email: String
+  users: [User!]!
 }
 
 """
 A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
 """
 scalar DateTime
+
+type UserBranch {
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime
+  id: Float!
+  name: String!
+}
 
 type User {
   createdAt: DateTime!
@@ -29,6 +38,7 @@ type User {
   customerId: Float!
   role: UserRole!
   isActive: Boolean!
+  branches: [UserBranch!]!
   salesRepresentative: SalesRepresentative
   priceOrder: Float
   branch: Float
@@ -54,7 +64,7 @@ type UserPaginatedResult {
 
 type Query {
   user(id: ID!): User!
-  me: User!
+  me: User
   users(pagination: PaginationInput): UserPaginatedResult!
 }
 

@@ -8,7 +8,6 @@ import {PaginationModule} from "../modules/pagination/pagination.module";
 
 @Module({
   imports: [TypeOrmModule.forFeature([UserRepository]), PaginationModule],
-  providers: [UsersResolver, UsersService],
-  controllers: [UserController],
+  providers: [UsersResolver, UsersService]
 })
 export class UsersModule {}

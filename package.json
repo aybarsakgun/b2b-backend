@@ -61,7 +61,8 @@
     "rimraf": "^3.0.2",
     "rxjs": "^7.0.0",
     "ts-md5": "^1.2.7",
-    "typeorm": "^0.2.32"
+    "typeorm": "^0.2.32",
+    "typeorm-naming-strategies": "^2.0.0"
   },
   "devDependencies": {
     "@nestjs/cli": "^7.6.0",

@@ -1,13 +1,12 @@
-import { Module } from "@nestjs/common";
-import { JwtModule } from "@nestjs/jwt";
-import { PassportModule } from "@nestjs/passport";
-import { TypeOrmModule } from "@nestjs/typeorm";
-
-import { env } from "../common/env";
-import { UserRepository } from "../users/user.repository";
-import { AuthResolver } from "./auth.resolver";
-import { AuthService } from "./auth.service";
-import { JwtStrategy } from "./jwt.strategy";
+import {Module} from "@nestjs/common";
+import {JwtModule} from "@nestjs/jwt";
+import {TypeOrmModule} from "@nestjs/typeorm";
+import {env} from "../common/env";
+import {UserRepository} from "../users/user.repository";
+import {AuthResolver} from "./auth.resolver";
+import {AuthService} from "./auth.service";
+import {PassportModule} from "@nestjs/passport";
+import {JwtStrategy} from "./jwt.strategy";
 
 @Module({
   imports: [
@@ -23,6 +22,7 @@ import { JwtStrategy } from "./jwt.strategy";
       },
     }),
   ],
-  providers: [AuthResolver, AuthService, JwtStrategy],
+  providers: [AuthResolver, AuthService, JwtStrategy]
 })
-export class AuthModule {}
+export class AuthModule {
+}
