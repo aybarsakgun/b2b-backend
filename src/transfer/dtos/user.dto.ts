@@ -7,14 +7,14 @@ import {
   IsObject,
   IsOptional,
   IsString,
-  ValidateNested
+  ValidateNested,
 } from "class-validator";
-import {Transform, Type} from "class-transformer";
-import {UserRole} from "../../users/user.model";
+import { Transform, Type } from "class-transformer";
+import { UserRole } from "../../users/user.model";
 
 export enum Roles {
-  ROLE_USER = 'ROLE_USER',
-  ROLE_ADMIN = 'ROLE_ADMIN'
+  ROLE_USER = "ROLE_USER",
+  ROLE_ADMIN = "ROLE_ADMIN",
 }
 
 const transformRole = (role: Roles): UserRole => {

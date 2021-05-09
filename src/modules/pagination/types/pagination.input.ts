@@ -1,6 +1,6 @@
-import {Field, InputType, Int} from "@nestjs/graphql";
-import {IsNumber, IsOptional} from "class-validator";
-import {IPaginationInput} from "../interfaces/pagination-input.interface";
+import { Field, InputType, Int } from "@nestjs/graphql";
+import { IsNumber, IsOptional } from "class-validator";
+import { IPaginationInput } from "../interfaces/pagination-input.interface";
 
 // export enum SortDirection {
 //   DESC = "DESC",
@@ -13,12 +13,12 @@ import {IPaginationInput} from "../interfaces/pagination-input.interface";
 
 @InputType()
 export class PaginationInput implements IPaginationInput {
-  @Field(() => Int, {defaultValue: 1})
+  @Field(() => Int, { defaultValue: 1 })
   @IsNumber()
   @IsOptional()
   page?: number;
 
-  @Field(() => Int, {defaultValue: 10})
+  @Field(() => Int, { defaultValue: 10 })
   @IsNumber()
   @IsOptional()
   limit?: number;

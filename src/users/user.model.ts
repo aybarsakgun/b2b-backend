@@ -1,9 +1,16 @@
-import {Field, ID, ObjectType, registerEnumType} from "@nestjs/graphql";
-import {Column, Entity, JoinTable, ManyToOne, OneToMany, PrimaryGeneratedColumn} from "typeorm";
-import {SalesRepresentative} from "./sales-representative/sales-representative.model";
-import {IUser} from "./interfaces/user.interface";
-import {BaseModel} from "../common/models";
-import {UserBranch} from "./user-branch/user-branch.model";
+import { Field, ID, ObjectType, registerEnumType } from "@nestjs/graphql";
+import {
+  Column,
+  Entity,
+  JoinTable,
+  ManyToOne,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from "typeorm";
+import { SalesRepresentative } from "./sales-representative/sales-representative.model";
+import { IUser } from "./interfaces/user.interface";
+import { BaseModel } from "../common/models";
+import { UserBranch } from "./user-branch/user-branch.model";
 
 export enum UserRole {
   ADMIN = "ADMIN",
@@ -53,11 +60,13 @@ export class User extends BaseModel implements IUser {
   isActive: boolean;
 
   @Field(() => [UserBranch])
-  @OneToMany(() => UserBranch, UserBranch => UserBranch.user, {cascade: true})
+  @OneToMany(() => UserBranch, (UserBranch) => UserBranch.user, {
+    cascade: true,
+  })
   branches: UserBranch[];
 
   @Field(() => SalesRepresentative, { nullable: true })
-  @ManyToOne(() => SalesRepresentative, {cascade: true})
+  @ManyToOne(() => SalesRepresentative, { cascade: true })
   salesRepresentative: SalesRepresentative;
 
   @Field({ nullable: true })

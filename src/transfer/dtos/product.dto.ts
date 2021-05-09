@@ -1,5 +1,13 @@
-import {IsArray, IsNumber, IsNumberString, IsObject, IsOptional, IsString, ValidateNested} from "class-validator";
-import {Type} from "class-transformer";
+import {
+  IsArray,
+  IsNumber,
+  IsNumberString,
+  IsObject,
+  IsOptional,
+  IsString,
+  ValidateNested,
+} from "class-validator";
+import { Type } from "class-transformer";
 
 export class CategoryDto {
   @IsNumber()

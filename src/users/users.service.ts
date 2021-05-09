@@ -1,9 +1,9 @@
 import { Injectable } from "@nestjs/common";
 import { UserRepository } from "./user.repository";
 import { User } from "./user.model";
-import {IPaginationInput} from "../modules/pagination/interfaces/pagination-input.interface";
-import {IPaginationResult} from "../modules/pagination/interfaces/pagination-result.interface";
-import {PaginationService} from "../modules/pagination/pagination.service";
+import { IPaginationInput } from "../modules/pagination/interfaces/pagination-input.interface";
+import { IPaginationResult } from "../modules/pagination/interfaces/pagination-result.interface";
+import { PaginationService } from "../modules/pagination/pagination.service";
 
 @Injectable()
 export class UsersService {
@@ -19,10 +19,12 @@ export class UsersService {
     return await this.userRepository.findOne(id);
   }
 
-  async findAll(paginationInput: IPaginationInput): Promise<IPaginationResult<User>> {
+  async findAll(
+    paginationInput: IPaginationInput
+  ): Promise<IPaginationResult<User>> {
     return this.paginationService.paginate<User>(
-      this.userRepository.createQueryBuilder('user'),
-      paginationInput,
-    )
+      this.userRepository.createQueryBuilder("user"),
+      paginationInput
+    );
   }
 }

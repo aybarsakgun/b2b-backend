@@ -1,22 +1,29 @@
-import {Field, ID, ObjectType} from "@nestjs/graphql";
-import {Column, Entity, Index, JoinColumn, ManyToOne, PrimaryGeneratedColumn} from "typeorm";
-import {BaseModel} from "../../common/models";
-import {Product} from "../product.model";
+import { Field, ID, ObjectType } from "@nestjs/graphql";
+import {
+  Column,
+  Entity,
+  Index,
+  JoinColumn,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from "typeorm";
+import { BaseModel } from "../../common/models";
+import { Product } from "../product.model";
 
 @ObjectType()
 @Entity()
-@Index(['product', 'warehouseId'], {unique: true})
+@Index(["product", "warehouseId"], { unique: true })
 export class Warehouse extends BaseModel {
   @Field(() => ID)
   @PrimaryGeneratedColumn()
   id: number;
 
   @Field(() => Product)
-  @ManyToOne(() => Product, product => product.warehouses)
+  @ManyToOne(() => Product, (product) => product.warehouses)
   product: Product;
 
   @Field()
-  @Column({length: 16})
+  @Column({ length: 16 })
   quantity: string;
 
   @Field()
@@ -28,7 +35,7 @@ export class Warehouse extends BaseModel {
   date: string;
 
   @Field()
-  @Column({length: 255})
+  @Column({ length: 255 })
   warehouseName: string;
 
   @Field()

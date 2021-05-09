@@ -18,7 +18,7 @@ const typeOrmConfig: ConnectionOptions = {
   cli: {
     migrationsDir: "src/common/migrations",
   },
-  namingStrategy: new SnakeNamingStrategy()
+  namingStrategy: new SnakeNamingStrategy(),
 };
 
 export = typeOrmConfig;

@@ -1,21 +1,21 @@
-import {Injectable} from "@nestjs/common";
-import {EntityManager, SelectQueryBuilder} from "typeorm";
-import {IPaginationInput} from "./interfaces/pagination-input.interface";
-import {IPaginationResult} from "./interfaces/pagination-result.interface";
-import * as _ from 'lodash';
+import { Injectable } from "@nestjs/common";
+import { EntityManager, SelectQueryBuilder } from "typeorm";
+import { IPaginationInput } from "./interfaces/pagination-input.interface";
+import { IPaginationResult } from "./interfaces/pagination-result.interface";
+import * as _ from "lodash";
 
 @Injectable()
 export class PaginationService {
-  constructor(
-    private entityManager: EntityManager
-  ) {
-  }
+  constructor(private entityManager: EntityManager) {}
 
   async paginate<T>(
     queryBuilder: SelectQueryBuilder<T>,
     paginationInput: IPaginationInput
   ): Promise<IPaginationResult<T>> {
-    if (_.isEmpty(paginationInput) || (!paginationInput.page && !paginationInput.limit)) {
+    if (
+      _.isEmpty(paginationInput) ||
+      (!paginationInput.page && !paginationInput.limit)
+    ) {
       return Promise.resolve({
         total: null,
         totalPage: null,
@@ -25,15 +25,15 @@ export class PaginationService {
       } as IPaginationResult<T>);
     }
 
-    const {limit, page} = paginationInput;
+    const { limit, page } = paginationInput;
 
     let query = queryBuilder.getQuery();
     const parameters = queryBuilder.getParameters();
     if (Object.values(parameters).length) {
-      Object.keys(parameters).forEach(key => {
-        const regexp = key => new RegExp(`:${key}`, 'g');
+      Object.keys(parameters).forEach((key) => {
+        const regexp = (key) => new RegExp(`:${key}`, "g");
         if (Array.isArray(parameters[key])) {
-          const val = (parameters[key] as string[]).join(',');
+          const val = (parameters[key] as string[]).join(",");
           query = query.replace(regexp(key), val);
         } else {
           query = query.replace(regexp(key), parameters[key]);

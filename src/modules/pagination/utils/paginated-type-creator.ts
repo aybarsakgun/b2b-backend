@@ -1,6 +1,6 @@
-import {Field, Int, ObjectType} from "@nestjs/graphql";
-import {Type} from "@nestjs/common";
-import {IPaginationResult} from "../interfaces/pagination-result.interface";
+import { Field, Int, ObjectType } from "@nestjs/graphql";
+import { Type } from "@nestjs/common";
+import { IPaginationResult } from "../interfaces/pagination-result.interface";
 
 export function PaginatedTypeCreator<T>(classRef: Type<T>): any {
   @ObjectType()

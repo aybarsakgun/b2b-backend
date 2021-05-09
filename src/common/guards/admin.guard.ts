@@ -1,7 +1,12 @@
-import {CanActivate, ExecutionContext, Injectable, UseGuards,} from "@nestjs/common";
-import {getRepository} from "typeorm";
-import {User, UserRole} from "../../users/user.model";
-import {getRequest} from "../utils/get-request";
+import {
+  CanActivate,
+  ExecutionContext,
+  Injectable,
+  UseGuards,
+} from "@nestjs/common";
+import { getRepository } from "typeorm";
+import { User, UserRole } from "../../users/user.model";
+import { getRequest } from "../utils/get-request";
 
 @Injectable()
 export class IsAdmin implements CanActivate {
