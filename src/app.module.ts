@@ -11,6 +11,7 @@ import {TransferModule} from "./transfer/transfer.module";
 import {APP_FILTER, APP_GUARD, APP_PIPE} from "@nestjs/core";
 import {JwtAuthGuard} from "./common/guards";
 import {AnyExceptionFilter} from "./common/filters/exception.filter";
+import {ProductModule} from "./product/product.module";
 
 @Module({
   providers: [
@@ -50,7 +51,8 @@ import {AnyExceptionFilter} from "./common/filters/exception.filter";
     }),
     AuthModule,
     UsersModule,
-    TransferModule
+    TransferModule,
+    ProductModule
   ],
 })
 export class AppModule {

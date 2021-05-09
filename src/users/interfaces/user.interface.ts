@@ -4,7 +4,7 @@ import { ISalesRepresentative } from "../sales-representative/interfaces/sales-r
 import {UserBranch} from "../user-branch/user-branch.model";
 
 export interface IUser extends IBase {
-  id: string;
+  id: number;
   username: string;
   password: string;
   email: string;

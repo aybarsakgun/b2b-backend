@@ -62,10 +62,125 @@ type UserPaginatedResult {
   items: [User!]!
 }
 
+type ProductPrice {
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime
+  id: ID!
+  value: String!
+  currency: String!
+  priceOrder: Float!
+  unit: ProductUnit!
+}
+
+type ProductUnit {
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime
+  id: ID!
+  value: String!
+  barcode: String
+  defaultPriceOrder: Float!
+  listPriceOrder: Float!
+  multiplier: Float!
+  length: Float
+  width: Float
+  height: Float
+  weight: Float
+  product: Product!
+  prices: [ProductPrice!]!
+}
+
+type Warehouse {
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime
+  id: ID!
+  product: Product!
+  quantity: String!
+  warehouseId: Float!
+  date: String!
+  warehouseName: String!
+  inventoryId: Float!
+}
+
+type Brand {
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime
+  id: ID!
+  name: String!
+  code: String!
+  models: [Model!]!
+  products: [Product!]!
+}
+
+type Model {
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime
+  id: ID!
+  name: String!
+  brand: Brand!
+}
+
+type Category {
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime
+  id: ID!
+  name: String!
+  description: String!
+  metaTitle: String!
+  metaDescription: String!
+  metaKeyword: String!
+  seo: String!
+  order: Float!
+  parent: Category
+  children: [Category!]!
+}
+
+type Product {
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime
+  id: ID!
+  code: String!
+  equivalentCode: String!
+  name: String!
+  metaDescription: String!
+  metaTitle: String!
+  metaKeywords: String!
+  description: String!
+  seo: String!
+  defaultUnit: String!
+  quantity: Float!
+  taxRate: Float!
+  image: String!
+  parent: Product!
+  children: Product!
+  units: [ProductUnit!]!
+  warehouses: [Warehouse!]!
+  categories: [Category!]!
+  model: Model!
+  brand: Brand!
+  currency: String!
+}
+
+type ProductsPaginatedResult {
+  total: Int
+  totalPage: Int
+  page: Int
+  limit: Int
+  items: [Product!]!
+}
+
 type Query {
   user(id: ID!): User!
   me: User
   users(pagination: PaginationInput): UserPaginatedResult!
+  product(id: ID!): Product!
+  products(pagination: PaginationInput): ProductsPaginatedResult!
 }
 
 input PaginationInput {

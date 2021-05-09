@@ -12,7 +12,7 @@ export class UsersService {
     private paginationService: PaginationService
   ) {}
 
-  async findById(id: string): Promise<User> {
+  async findById(id: number): Promise<User> {
     if (!id) {
       return null;
     }
