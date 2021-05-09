@@ -1,4 +1,4 @@
-export interface IProductFilters {
+export interface ICatalogFilters {
   brands: number[];
   models: number[];
   category: number;

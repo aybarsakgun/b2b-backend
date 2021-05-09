@@ -5,7 +5,7 @@ import { PaginationService } from "../modules/pagination/pagination.service";
 import { ProductRepository } from "./product.repository";
 import { Product } from "./product.model";
 import { INormalizedGqlRequestedPaths } from "../common/utils/normalize-gql-resolve-info";
-import {IProductFilters} from "./interfaces/product-filters.interface";
+import {ICatalogFilters} from "./interfaces/catalog-filters.interface";
 
 @Injectable()
 export class ProductService {
@@ -30,10 +30,10 @@ export class ProductService {
   async findAll(
     requestedPaths: INormalizedGqlRequestedPaths,
     paginationInput: IPaginationInput,
-    filters: IProductFilters
+    filters: ICatalogFilters
   ): Promise<IPaginationResult<Product>> {
     return this.paginationService.paginate<Product>(
-      this.productRepository.findByFilter(filters, requestedPaths),
+      this.productRepository.findByFilters(filters, requestedPaths),
       paginationInput
     );
   }

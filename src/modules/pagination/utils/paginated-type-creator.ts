@@ -2,9 +2,9 @@ import { Field, Int, ObjectType } from "@nestjs/graphql";
 import { Type } from "@nestjs/common";
 import { IPaginationResult } from "../interfaces/pagination-result.interface";
 
-export function PaginatedTypeCreator<T>(classRef: Type<T>): any {
-  @ObjectType()
-  abstract class PaginatedResultType implements IPaginationResult<T> {
+export function paginatedTypeCreator<T>(classRef: Type<T>): any {
+  @ObjectType(`${classRef.name}PaginatedResult`)
+  abstract class PaginatedResult implements IPaginationResult<T> {
     @Field(() => Int, { nullable: true })
     total: number;
 
@@ -20,5 +20,5 @@ export function PaginatedTypeCreator<T>(classRef: Type<T>): any {
     @Field(() => [classRef])
     items: T[];
   }
-  return PaginatedResultType;
+  return PaginatedResult;
 }

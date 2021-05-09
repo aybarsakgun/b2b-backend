@@ -3,9 +3,11 @@ import { GetUserArgs } from "./types/get-user.args";
 import { User } from "./user.model";
 import { UsersService } from "./users.service";
 import { PaginationInput } from "../modules/pagination/types/pagination.input";
-import { UserPaginatedResult } from "./types/user-paginated.result";
 import { IPaginationResult } from "../modules/pagination/interfaces/pagination-result.interface";
 import { CurrentUser } from "../common/decorators";
+import {paginatedTypeCreator} from "../modules/pagination/utils/paginated-type-creator";
+
+const usersPaginatedResult = paginatedTypeCreator(User);
 
 @Resolver(() => User)
 export class UsersResolver {
@@ -21,7 +23,7 @@ export class UsersResolver {
     return this.usersService.findById(user?.id);
   }
 
-  @Query(() => UserPaginatedResult, { name: "users" })
+  @Query(() => usersPaginatedResult, { name: "users" })
   async getUsers(
     @Args("pagination", { nullable: true }) pagination?: PaginationInput
   ): Promise<IPaginationResult<User>> {

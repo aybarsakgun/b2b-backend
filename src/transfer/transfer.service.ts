@@ -107,7 +107,6 @@ export class TransferService {
         );
         brand = findBrand.length ? findBrand[0].id : null;
       }
-      console.log(brand);
       let model = null;
       if (brand && product.model) {
         const findModel = await queryRunner.manager.query(
@@ -116,7 +115,6 @@ export class TransferService {
         );
         model = findModel.length ? findModel[0].id : null;
       }
-      console.log(model);
       if (product.brand && !brand) {
         const brandInsert = await queryRunner.manager.insert(
           Brand,

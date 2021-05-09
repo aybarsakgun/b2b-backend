@@ -20,15 +20,15 @@ export interface INormalizedGqlRequestedPaths {
 export class NormalizeGqlResolveInfo {
   private readonly fragments: Record<string, FragmentDefinitionNode>;
   private readonly fieldNodes: readonly FieldNode[];
-  private readonly isPaginated: boolean;
+  private readonly escapePaths: string[];
 
   private constructor(
     { fragments, fieldNodes }: GraphQLResolveInfo,
-    isPaginated?: boolean
+    escapePaths?: string[]
   ) {
     this.fragments = fragments;
     this.fieldNodes = fieldNodes;
-    this.isPaginated = !!isPaginated;
+    this.escapePaths = escapePaths || [];
   }
 
   private normalizeJoins(node: SelectionNode): INormalizedGqlRequestedJoin[] {
@@ -57,7 +57,7 @@ export class NormalizeGqlResolveInfo {
   ): INormalizedGqlRequestedJoin[] => {
     return selections.reduce<INormalizedGqlRequestedJoin[]>(
       (paths, field, i) => {
-        if (this.isPaginated && field["name"].value === "items") {
+        if (this.escapePaths.includes(field["name"].value)) {
           return paths.concat(this.mapJoins(field["selectionSet"].selections));
         }
         return paths.concat(this.normalizeJoins(field));
@@ -96,13 +96,13 @@ export class NormalizeGqlResolveInfo {
 
   static readonly RequestedPaths = createParamDecorator<
     {
-      isPaginated: boolean;
+      escapePaths: string[];
     },
     ExecutionContext
   >((options, ctx) =>
     new NormalizeGqlResolveInfo(
       GqlExecutionContext.create(ctx).getInfo<GraphQLResolveInfo>(),
-      options?.isPaginated
+      options?.escapePaths
     ).requestedPaths()
   );
 }

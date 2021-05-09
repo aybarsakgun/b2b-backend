@@ -23,9 +23,12 @@ export class Brand extends BaseModel {
   @OneToMany(() => Model, (model) => model.brand)
   models: string;
 
-  @Field(() => [Product])
   @OneToMany(() => Product, (product) => product.brand)
   products: Product[];
+
+  @Field({nullable: true})
+  @Column({ select: false, nullable: true })
+  productCount?: number;
 
   constructor(partial: Partial<Brand> = {}) {
     super();

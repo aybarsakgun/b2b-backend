@@ -13,7 +13,7 @@ import { Product } from "../product.model";
 
 @ObjectType()
 @Entity()
-@Index(["parent"], { unique: true })
+@Index(["parent"])
 export class Category extends BaseModel {
   @Field(() => ID)
   @PrimaryColumn()

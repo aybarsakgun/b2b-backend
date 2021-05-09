@@ -2,7 +2,7 @@ import {Field, ID, InputType} from "@nestjs/graphql";
 import {IsArray, IsOptional} from "class-validator";
 
 @InputType()
-export class ProductFiltersInput {
+export class CatalogFiltersInput {
   @Field(() => [ID], {nullable: true})
   @IsOptional()
   @IsArray()

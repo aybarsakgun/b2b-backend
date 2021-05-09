@@ -112,7 +112,7 @@ type Brand {
   name: String!
   code: String!
   models: [Model!]!
-  products: [Product!]!
+  productCount: Float
 }
 
 type Model {
@@ -162,12 +162,12 @@ type Product {
   units: [ProductUnit!]!
   warehouses: [Warehouse!]!
   categories: [Category!]!
-  model: Model!
-  brand: Brand!
+  model: Model
+  brand: Brand
   currency: String!
 }
 
-type ProductsPaginatedResult {
+type ProductPaginatedResult {
   total: Int
   totalPage: Int
   page: Int
@@ -180,7 +180,8 @@ type Query {
   me: User
   users(pagination: PaginationInput): UserPaginatedResult!
   product(id: ID!): Product!
-  products(filters: ProductFiltersInput, pagination: PaginationInput): ProductsPaginatedResult!
+  products(filters: CatalogFiltersInput, pagination: PaginationInput): ProductPaginatedResult!
+  brands(filters: CatalogFiltersInput): [Brand!]!
 }
 
 input PaginationInput {
@@ -188,7 +189,7 @@ input PaginationInput {
   limit: Int = 10
 }
 
-input ProductFiltersInput {
+input CatalogFiltersInput {
   brands: [ID!]
   models: [ID!]
   category: ID
