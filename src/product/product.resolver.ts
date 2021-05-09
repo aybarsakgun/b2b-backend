@@ -10,6 +10,7 @@ import { ProductsPaginatedResult } from "./types/products-paginated.result";
 import { PaginationInput } from "../modules/pagination/types/pagination.input";
 import { IPaginationResult } from "../modules/pagination/interfaces/pagination-result.interface";
 import { GetProductArgs } from "./types/get-product.args";
+import {ProductFiltersInput} from "./types/product-filters.input";
 
 @Public()
 @Resolver(() => Product)
@@ -29,8 +30,9 @@ export class ProductResolver {
   async getProducts(
     @NormalizeGqlResolveInfo.RequestedPaths({ isPaginated: true })
     requestedPaths: INormalizedGqlRequestedPaths,
-    @Args("pagination", { nullable: true }) pagination?: PaginationInput
+    @Args("pagination", { nullable: true }) pagination?: PaginationInput,
+    @Args("filters", {nullable: true}) filters?: ProductFiltersInput
   ): Promise<IPaginationResult<Product>> {
-    return this.productService.findAll(requestedPaths, pagination);
+    return this.productService.findAll(requestedPaths, pagination, filters);
   }
 }

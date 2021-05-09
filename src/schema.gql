@@ -180,12 +180,18 @@ type Query {
   me: User
   users(pagination: PaginationInput): UserPaginatedResult!
   product(id: ID!): Product!
-  products(pagination: PaginationInput): ProductsPaginatedResult!
+  products(filters: ProductFiltersInput, pagination: PaginationInput): ProductsPaginatedResult!
 }
 
 input PaginationInput {
   page: Int = 1
   limit: Int = 10
+}
+
+input ProductFiltersInput {
+  brands: [ID!]
+  models: [ID!]
+  category: ID
 }
 
 type Mutation {
