@@ -51,14 +51,14 @@ export class Category extends BaseModel {
   @ManyToOne(() => Category, (category) => category.children)
   parent: Category;
 
-  @Field(() => [Category], {defaultValue: []})
+  @Field(() => [Category], { defaultValue: [] })
   @OneToMany(() => Category, (category) => category.parent)
   children: Category[];
 
   @ManyToMany(() => Product, (product) => product.categories)
   products: Product[];
 
-  @Field({nullable: true})
+  @Field({ nullable: true })
   @Column({ select: false, nullable: true })
   productCount?: number;
 

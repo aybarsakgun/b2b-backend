@@ -1,42 +1,39 @@
-import {Args, Query, Resolver} from "@nestjs/graphql";
-import {Product} from "./product.model";
-import {ProductService} from "./product.service";
-import {Public} from "../common/decorators";
+import { Args, Query, Resolver } from "@nestjs/graphql";
+import { Product } from "./product.model";
+import { ProductService } from "./product.service";
+import { Public } from "../common/decorators";
 import {
   INormalizedGqlRequestedPaths,
   NormalizeGqlResolveInfo,
 } from "../common/utils/normalize-gql-resolve-info";
-import {PaginationInput} from "../modules/pagination/types/pagination.input";
-import {IPaginationResult} from "../modules/pagination/interfaces/pagination-result.interface";
-import {GetProductArgs} from "./types/get-product.args";
-import {CatalogFiltersInput} from "./types/catalog-filters.input";
-import {paginatedTypeCreator} from "../modules/pagination/utils/paginated-type-creator";
+import { PaginationInput } from "../modules/pagination/types/pagination.input";
+import { IPaginationResult } from "../modules/pagination/interfaces/pagination-result.interface";
+import { GetProductArgs } from "./types/get-product.args";
+import { CatalogFiltersInput } from "./types/catalog-filters.input";
+import { paginatedTypeCreator } from "../modules/pagination/utils/paginated-type-creator";
 
 const productsPaginatedResult = paginatedTypeCreator(Product);
 
 @Public()
 @Resolver(() => Product)
 export class ProductResolver {
-  constructor(
-    private readonly productService: ProductService
-  ) {
-  }
+  constructor(private readonly productService: ProductService) {}
 
-  @Query(() => Product, {name: "product"})
+  @Query(() => Product, { name: "product" })
   async getProduct(
     @NormalizeGqlResolveInfo.RequestedPaths()
-      requestedPaths: INormalizedGqlRequestedPaths,
+    requestedPaths: INormalizedGqlRequestedPaths,
     @Args() args: GetProductArgs
   ): Promise<Product> {
     return this.productService.findById(requestedPaths, args.id);
   }
 
-  @Query(() => productsPaginatedResult, {name: "products"})
+  @Query(() => productsPaginatedResult, { name: "products" })
   async getProducts(
-    @NormalizeGqlResolveInfo.RequestedPaths({escapePaths: ['items']})
-      requestedPaths: INormalizedGqlRequestedPaths,
-    @Args("pagination", {nullable: true}) pagination?: PaginationInput,
-    @Args("filters", {nullable: true}) filters?: CatalogFiltersInput
+    @NormalizeGqlResolveInfo.RequestedPaths({ escapePaths: ["items"] })
+    requestedPaths: INormalizedGqlRequestedPaths,
+    @Args("pagination", { nullable: true }) pagination?: PaginationInput,
+    @Args("filters", { nullable: true }) filters?: CatalogFiltersInput
   ): Promise<IPaginationResult<Product>> {
     return this.productService.findAll(requestedPaths, pagination, filters);
   }

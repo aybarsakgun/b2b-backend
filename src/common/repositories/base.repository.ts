@@ -10,7 +10,9 @@ export abstract class BaseRepository<T> extends Repository<T> {
     requestedPaths: INormalizedGqlRequestedPaths,
     queryBuilder?: SelectQueryBuilder<T>
   ): SelectQueryBuilder<T> {
-    const query = queryBuilder ? queryBuilder : this.createQueryBuilder(requestedPaths.root);
+    const query = queryBuilder
+      ? queryBuilder
+      : this.createQueryBuilder(requestedPaths.root);
     requestedPaths.relations.forEach(([parent, child]) => {
       query.leftJoinAndSelect(`${parent}.${child}`, `${parent}__${child}`);
     });

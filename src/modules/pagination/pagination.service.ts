@@ -1,15 +1,12 @@
-import {Injectable} from "@nestjs/common";
-import {EntityManager, SelectQueryBuilder} from "typeorm";
-import {IPaginationInput} from "./interfaces/pagination-input.interface";
-import {IPaginationResult} from "./interfaces/pagination-result.interface";
+import { Injectable } from "@nestjs/common";
+import { EntityManager, SelectQueryBuilder } from "typeorm";
+import { IPaginationInput } from "./interfaces/pagination-input.interface";
+import { IPaginationResult } from "./interfaces/pagination-result.interface";
 import * as _ from "lodash";
 
 @Injectable()
 export class PaginationService {
-  constructor(
-    private entityManager: EntityManager
-  ) {
-  }
+  constructor(private entityManager: EntityManager) {}
 
   async paginate<T>(
     queryBuilder: SelectQueryBuilder<T>,
@@ -27,7 +24,7 @@ export class PaginationService {
         totalPage,
         page,
         limit,
-        items
+        items,
       });
     };
     if (
@@ -35,10 +32,16 @@ export class PaginationService {
       (!paginationInput.page && !paginationInput.limit)
     ) {
       const getItems: T[] = await queryBuilder.getMany();
-      return createPaginationResult(getItems.length, null, null, null, getItems);
+      return createPaginationResult(
+        getItems.length,
+        null,
+        null,
+        null,
+        getItems
+      );
     }
 
-    let {limit, page} = paginationInput;
+    let { limit, page } = paginationInput;
 
     limit = +limit || 10;
     page = +page || 1;
@@ -67,6 +70,12 @@ export class PaginationService {
       .skip((page - 1) * limit)
       .getMany();
 
-    return createPaginationResult(total, Math.ceil(total / limit), page, limit, getItems);
+    return createPaginationResult(
+      total,
+      Math.ceil(total / limit),
+      page,
+      limit,
+      getItems
+    );
   }
 }

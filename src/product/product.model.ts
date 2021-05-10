@@ -98,11 +98,11 @@ export class Product extends BaseModel {
   @JoinTable({ name: "product_to_category" })
   categories: Category[];
 
-  @Field(() => Model, {nullable: true})
+  @Field(() => Model, { nullable: true })
   @ManyToOne(() => Model, (model) => model.products)
   model: Model;
 
-  @Field(() => Brand, {nullable: true})
+  @Field(() => Brand, { nullable: true })
   @ManyToOne(() => Brand, (brand) => brand.products)
   brand: Brand;
 

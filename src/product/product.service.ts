@@ -5,7 +5,7 @@ import { PaginationService } from "../modules/pagination/pagination.service";
 import { ProductRepository } from "./product.repository";
 import { Product } from "./product.model";
 import { INormalizedGqlRequestedPaths } from "../common/utils/normalize-gql-resolve-info";
-import {ICatalogFilters} from "./interfaces/catalog-filters.interface";
+import { ICatalogFilters } from "./interfaces/catalog-filters.interface";
 
 @Injectable()
 export class ProductService {
