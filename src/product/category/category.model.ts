@@ -43,7 +43,7 @@ export class Category extends BaseModel {
   @Column({ length: 255 })
   seo: string;
 
-  @Field()
+  @Field({ nullable: true })
   @Column({ nullable: true }) // TODO: nullable false. order gelmediği için geçici true yaptım.
   order: number;
 
@@ -51,12 +51,16 @@ export class Category extends BaseModel {
   @ManyToOne(() => Category, (category) => category.children)
   parent: Category;
 
-  @Field(() => [Category])
+  @Field(() => [Category], {defaultValue: []})
   @OneToMany(() => Category, (category) => category.parent)
   children: Category[];
 
   @ManyToMany(() => Product, (product) => product.categories)
   products: Product[];
+
+  @Field({nullable: true})
+  @Column({ select: false, nullable: true })
+  productCount?: number;
 
   constructor(partial: Partial<Category> = {}) {
     super();
