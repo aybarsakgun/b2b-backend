@@ -15,12 +15,16 @@ export class Model extends BaseModel {
   @Column({ length: 255 })
   name: string;
 
-  @Field(() => Brand)
+  @Field(() => Brand, {nullable: true})
   @ManyToOne(() => Brand, (brand) => brand.models)
   brand: Brand;
 
   @OneToMany(() => Product, (product) => product.model)
   products: Product[];
+
+  @Field({nullable: true})
+  @Column({ select: false, nullable: true })
+  productCount?: number;
 
   constructor(partial: Partial<Model> = {}) {
     super();

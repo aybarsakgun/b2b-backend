@@ -1,5 +1,4 @@
 import {Injectable} from "@nestjs/common";
-import {INormalizedGqlRequestedPaths} from "../../common/utils/normalize-gql-resolve-info";
 import {ICatalogFilters} from "../interfaces/catalog-filters.interface";
 import {Brand} from "./brand.model";
 import {BrandRepository} from "./brand.repository";

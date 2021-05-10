@@ -121,7 +121,8 @@ type Model {
   deletedAt: DateTime
   id: ID!
   name: String!
-  brand: Brand!
+  brand: Brand
+  productCount: Float
 }
 
 type Category {
@@ -135,9 +136,10 @@ type Category {
   metaDescription: String!
   metaKeyword: String!
   seo: String!
-  order: Float!
+  order: Float
   parent: Category
   children: [Category!]!
+  productCount: Float
 }
 
 type Product {
@@ -182,6 +184,8 @@ type Query {
   product(id: ID!): Product!
   products(filters: CatalogFiltersInput, pagination: PaginationInput): ProductPaginatedResult!
   brands(filters: CatalogFiltersInput): [Brand!]!
+  categories(filters: CatalogFiltersInput): [Category!]!
+  models(filters: CatalogFiltersInput): [Model!]!
 }
 
 input PaginationInput {

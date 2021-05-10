@@ -19,7 +19,7 @@ export class Brand extends BaseModel {
   @Column({ length: 255 })
   code: string;
 
-  @Field(() => [Model])
+  @Field(() => [Model], {defaultValue: []})
   @OneToMany(() => Model, (model) => model.brand)
   models: string;
 
