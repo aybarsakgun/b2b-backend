@@ -5,7 +5,7 @@ import { UsersService } from "./users.service";
 import { PaginationInput } from "../modules/pagination/types/pagination.input";
 import { IPaginationResult } from "../modules/pagination/interfaces/pagination-result.interface";
 import { CurrentUser } from "../common/decorators";
-import {paginatedTypeCreator} from "../modules/pagination/utils/paginated-type-creator";
+import { paginatedTypeCreator } from "../modules/pagination/utils/paginated-type-creator";
 
 const usersPaginatedResult = paginatedTypeCreator(User);
 

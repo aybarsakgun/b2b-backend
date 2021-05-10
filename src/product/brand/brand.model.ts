@@ -19,14 +19,14 @@ export class Brand extends BaseModel {
   @Column({ length: 255 })
   code: string;
 
-  @Field(() => [Model], {defaultValue: []})
+  @Field(() => [Model], { defaultValue: [] })
   @OneToMany(() => Model, (model) => model.brand)
   models: string;
 
   @OneToMany(() => Product, (product) => product.brand)
   products: Product[];
 
-  @Field({nullable: true})
+  @Field({ nullable: true })
   @Column({ select: false, nullable: true })
   productCount?: number;
 
