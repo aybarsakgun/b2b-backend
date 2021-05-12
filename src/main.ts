@@ -5,6 +5,7 @@ import { env } from "./common/env";
 import { helmetMiddleware, rateLimitMiddleware } from "./common/middlewares";
 import { Logger } from "@nestjs/common";
 import * as bodyParser from "body-parser";
+import {LoggingInterceptor} from "./common/interceptors/logging.interceptor";
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule, {
@@ -17,6 +18,8 @@ async function bootstrap() {
   app.use(bodyParser.json({ limit: "50mb" }));
 
   app.enableCors();
+
+  app.useGlobalInterceptors(new LoggingInterceptor());
 
   await app.listen(env.PORT);
 

@@ -54,9 +54,6 @@ export class WarehouseDto {
 
   @IsString()
   readonly warehouseName: string;
-
-  @IsNumber()
-  readonly inventoryId: number;
 }
 
 export class ProductPriceDto {

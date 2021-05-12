@@ -38,10 +38,6 @@ export class Warehouse extends BaseModel {
   @Column({ length: 255 })
   warehouseName: string;
 
-  @Field()
-  @Column()
-  inventoryId: number;
-
   constructor(partial: Partial<Warehouse> = {}) {
     super();
     Object.assign(this, partial);
