@@ -1,16 +1,16 @@
 import { Args, Mutation, Resolver } from "@nestjs/graphql";
 import { Public } from "../common/decorators";
 import { AuthService } from "./auth.service";
-import { SignInInput } from "./types/sign-in.input";
-import { SignInResult } from "./types/sign-in-result";
+import { LoginInput } from "./types/login.input";
+import { LoginResult } from "./types/login-result";
 
 @Resolver()
 @Public()
 export class AuthResolver {
   constructor(private readonly authService: AuthService) {}
 
-  @Mutation(() => SignInResult)
-  async signIn(@Args("data") input: SignInInput): Promise<SignInResult> {
-    return await this.authService.signIn(input);
+  @Mutation(() => LoginResult)
+  async login(@Args("data") input: LoginInput): Promise<LoginResult> {
+    return await this.authService.login(input);
   }
 }

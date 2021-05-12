@@ -40,7 +40,6 @@ export class SalesRepresentativeDto {
   @IsOptional()
   readonly phone?: string;
 
-  @IsEmail()
   @IsOptional()
   readonly email?: string;
 }

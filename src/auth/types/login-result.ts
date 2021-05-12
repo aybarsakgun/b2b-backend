@@ -3,7 +3,7 @@ import { IsNotEmpty } from "class-validator";
 import { User } from "../../users/user.model";
 
 @ObjectType()
-export class SignInResult {
+export class LoginResult {
   @Field()
   @IsNotEmpty()
   token: string;

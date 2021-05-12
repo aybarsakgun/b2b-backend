@@ -49,7 +49,7 @@ enum UserRole {
   USER
 }
 
-type SignInResult {
+type LoginResult {
   token: String!
   user: User!
 }
@@ -101,7 +101,6 @@ type Warehouse {
   warehouseId: Float!
   date: String!
   warehouseName: String!
-  inventoryId: Float!
 }
 
 type Brand {
@@ -200,10 +199,10 @@ input CatalogFiltersInput {
 }
 
 type Mutation {
-  signIn(data: SignInInput!): SignInResult!
+  login(data: LoginInput!): LoginResult!
 }
 
-input SignInInput {
-  email: String!
+input LoginInput {
+  username: String!
   password: String!
 }

@@ -1,15 +1,13 @@
-import { BadRequestException, Injectable } from "@nestjs/common";
-import { UserDto } from "./dtos/user.dto";
-import { User } from "../users/user.model";
-import { Connection, In } from "typeorm";
-import { Product } from "../product/product.model";
-import { Brand } from "../product/brand/brand.model";
-import { fullConsoleLog } from "../common/utils";
-import { CategoryDto, ProductDto, ProductUnitDto } from "./dtos/product.dto";
-import { Model } from "../product/model/model.model";
-import { Category } from "../product/category/category.model";
-import { query } from "express";
-import { slugify } from "../common/utils/slugify";
+import {BadRequestException, Injectable} from "@nestjs/common";
+import {UserDto} from "./dtos/user.dto";
+import {User} from "../users/user.model";
+import {Connection, In} from "typeorm";
+import {Product} from "../product/product.model";
+import {Brand} from "../product/brand/brand.model";
+import {CategoryDto, ProductDto} from "./dtos/product.dto";
+import {Model} from "../product/model/model.model";
+import {Category} from "../product/category/category.model";
+import {slugify} from "../common/utils/slugify";
 
 @Injectable()
 export class TransferService {
@@ -22,15 +20,15 @@ export class TransferService {
     await queryRunner.startTransaction();
 
     try {
-      const users = await queryRunner.manager
+      const entityUsers = await queryRunner.manager
         .getRepository(User)
         .createQueryBuilder("user")
         .select("user.customerId")
         .getMany();
-      const willBeDeleteUsers = users
+      const willBeDeleteUsers = entityUsers
         .filter(
           (user) =>
-            !users.some((userDto) => userDto.customerId === user.customerId)
+            !entityUsers.some((userDto) => userDto.customerId === user.customerId)
         )
         .map((user) => user.customerId);
       if (willBeDeleteUsers.length) {
@@ -277,9 +275,7 @@ export class TransferService {
         quantity,
         warehouse_id,
         date,
-        warehouse_name,
-        inventory_id) VALUES (
-        ?,
+        warehouse_name) VALUES (
         ?,
         ?,
         ?,
@@ -289,15 +285,13 @@ export class TransferService {
         quantity = values(quantity),
         warehouse_id = values(warehouse_id),
         date = values(date),
-        warehouse_name = values(warehouse_name),
-        inventory_id = values(inventory_id);`,
+        warehouse_name = values(warehouse_name);`,
             [
               product.id,
               warehouse.quantity,
               warehouse.warehouseId,
               warehouse.date,
-              warehouse.warehouseName,
-              warehouse.inventoryId,
+              warehouse.warehouseName
             ]
           );
         }

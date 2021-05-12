@@ -2,9 +2,9 @@ import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
 import { InjectRepository } from "@nestjs/typeorm";
 import { UserRepository } from "../users/user.repository";
-import { SignInInput } from "./types/sign-in.input";
+import { LoginInput } from "./types/login.input";
 import { Md5 } from "ts-md5";
-import { SignInResult } from "./types/sign-in-result";
+import { LoginResult } from "./types/login-result";
 import { User } from "../users/user.model";
 import { IJwtPayload } from "../common/interfaces";
 
@@ -20,8 +20,8 @@ export class AuthService {
     return await this.userRepository.findOne(payload.id);
   }
 
-  async signIn({ email, password }: SignInInput): Promise<SignInResult> {
-    const user: User = await this.userRepository.findOne({ email });
+  async login({ username, password }: LoginInput): Promise<LoginResult> {
+    const user: User = await this.userRepository.findOne({ username }, {relations: ['branches', 'salesRepresentative']});
 
     if (!user) {
       throw new HttpException("Invalid credentials.", HttpStatus.UNAUTHORIZED);
@@ -30,6 +30,8 @@ export class AuthService {
     if (Md5.hashStr(password) !== user.password) {
       throw new HttpException("Invalid credentials.", HttpStatus.UNAUTHORIZED);
     }
+
+    // await new Promise(resolve => setTimeout(resolve, 2000)); // fake delay
 
     return {
       token: this.jwtService.sign({
