@@ -18,8 +18,8 @@ export class UsersResolver {
     return this.usersService.findById(args.id);
   }
 
-  @Query(() => User, { name: "me", nullable: true })
-  async getMe(@CurrentUser() user: User): Promise<User> {
+  @Query(() => User, { name: "currentUser" })
+  async getCurrentUser(@CurrentUser() user: User): Promise<User> {
     return this.usersService.findById(user?.id);
   }
 
