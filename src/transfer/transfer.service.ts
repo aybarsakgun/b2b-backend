@@ -1,13 +1,13 @@
-import {BadRequestException, Injectable} from "@nestjs/common";
-import {UserDto} from "./dtos/user.dto";
-import {User} from "../users/user.model";
-import {Connection, In} from "typeorm";
-import {Product} from "../product/product.model";
-import {Brand} from "../product/brand/brand.model";
-import {CategoryDto, ProductDto} from "./dtos/product.dto";
-import {Model} from "../product/model/model.model";
-import {Category} from "../product/category/category.model";
-import {slugify} from "../common/utils/slugify";
+import { BadRequestException, Injectable } from "@nestjs/common";
+import { UserDto } from "./dtos/user.dto";
+import { User } from "../users/user.model";
+import { Connection, In } from "typeorm";
+import { Product } from "../product/product.model";
+import { Brand } from "../product/brand/brand.model";
+import { CategoryDto, ProductDto } from "./dtos/product.dto";
+import { Model } from "../product/model/model.model";
+import { Category } from "../product/category/category.model";
+import { slugify } from "../common/utils/slugify";
 
 @Injectable()
 export class TransferService {
@@ -28,7 +28,9 @@ export class TransferService {
       const willBeDeleteUsers = entityUsers
         .filter(
           (user) =>
-            !entityUsers.some((userDto) => userDto.customerId === user.customerId)
+            !entityUsers.some(
+              (userDto) => userDto.customerId === user.customerId
+            )
         )
         .map((user) => user.customerId);
       if (willBeDeleteUsers.length) {
@@ -291,7 +293,7 @@ export class TransferService {
               warehouse.quantity,
               warehouse.warehouseId,
               warehouse.date,
-              warehouse.warehouseName
+              warehouse.warehouseName,
             ]
           );
         }
