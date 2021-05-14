@@ -21,7 +21,10 @@ export class AuthService {
   }
 
   async login({ username, password }: LoginInput): Promise<LoginResult> {
-    const user: User = await this.userRepository.findOne({ username }, {relations: ['branches', 'salesRepresentative']});
+    const user: User = await this.userRepository.findOne(
+      { username },
+      { relations: ["branches", "salesRepresentative"] }
+    );
 
     if (!user) {
       throw new HttpException("Invalid credentials.", HttpStatus.UNAUTHORIZED);

@@ -77,9 +77,9 @@ export class Product extends BaseModel {
   @ManyToOne(() => Product, (product) => product.children)
   parent: Product;
 
-  @Field(() => Product)
+  @Field(() => [Product])
   @OneToMany(() => Product, (product) => product.parent)
-  children: Product;
+  children: Product[];
 
   @Field(() => [ProductUnit])
   @OneToMany(() => ProductUnit, (productUnit) => productUnit.product)

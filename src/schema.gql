@@ -159,7 +159,7 @@ type Product {
   taxRate: Float!
   image: String!
   parent: Product!
-  children: Product!
+  children: [Product!]!
   units: [ProductUnit!]!
   warehouses: [Warehouse!]!
   categories: [Category!]!
@@ -178,7 +178,7 @@ type ProductPaginatedResult {
 
 type Query {
   user(id: ID!): User!
-  me: User
+  currentUser: User!
   users(pagination: PaginationInput): UserPaginatedResult!
   product(id: ID!): Product!
   products(filters: CatalogFiltersInput, pagination: PaginationInput): ProductPaginatedResult!
