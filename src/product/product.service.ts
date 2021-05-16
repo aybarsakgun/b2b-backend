@@ -6,6 +6,8 @@ import { ProductRepository } from "./product.repository";
 import { Product } from "./product.model";
 import { INormalizedGqlRequestedPaths } from "../common/utils/normalize-gql-resolve-info";
 import { ICatalogFilters } from "./interfaces/catalog-filters.interface";
+import {ProductPrice} from "./product-price/product-price.model";
+import {User} from "../users/user.model";
 
 @Injectable()
 export class ProductService {
@@ -28,13 +30,27 @@ export class ProductService {
   }
 
   async findAll(
+    user: User,
     requestedPaths: INormalizedGqlRequestedPaths,
     paginationInput: IPaginationInput,
     filters: ICatalogFilters
   ): Promise<IPaginationResult<Product>> {
     return this.paginationService.paginate<Product>(
       this.productRepository.findByFilters(filters, requestedPaths),
-      paginationInput
+      paginationInput,
+      (item) => {
+        return {
+          ...item,
+          units: item.units?.map(unit => {
+            const defaultPriceOrder: number = user?.priceOrder || unit.defaultPriceOrder;
+            return {
+              ...unit,
+              defaultPriceOrder: defaultPriceOrder,
+              prices: unit.prices?.filter(price => price.priceOrder === defaultPriceOrder || price.priceOrder === unit.listPriceOrder) || []
+            }
+          }) || []
+        }
+      }
     );
   }
 }

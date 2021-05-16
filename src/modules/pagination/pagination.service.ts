@@ -10,7 +10,8 @@ export class PaginationService {
 
   async paginate<T>(
     queryBuilder: SelectQueryBuilder<T>,
-    paginationInput: IPaginationInput
+    paginationInput: IPaginationInput,
+    manipulateFn?: (item: T) => T
   ): Promise<IPaginationResult<T>> {
     const createPaginationResult = (
       total: number,
@@ -75,7 +76,7 @@ export class PaginationService {
       Math.ceil(total / limit),
       page,
       limit,
-      getItems
+      manipulateFn ? getItems.map(manipulateFn) : getItems
     );
   }
 }

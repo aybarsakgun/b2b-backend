@@ -1,7 +1,7 @@
-import { Args, Query, Resolver } from "@nestjs/graphql";
+import {Args, Context, Query, Resolver} from "@nestjs/graphql";
 import { Product } from "./product.model";
 import { ProductService } from "./product.service";
-import { Public } from "../common/decorators";
+import {CurrentUser, Public} from "../common/decorators";
 import {
   INormalizedGqlRequestedPaths,
   NormalizeGqlResolveInfo,
@@ -11,6 +11,7 @@ import { IPaginationResult } from "../modules/pagination/interfaces/pagination-r
 import { GetProductArgs } from "./types/get-product.args";
 import { CatalogFiltersInput } from "./types/catalog-filters.input";
 import { paginatedTypeCreator } from "../modules/pagination/utils/paginated-type-creator";
+import {User} from "../users/user.model";
 
 const productsPaginatedResult = paginatedTypeCreator(Product);
 
@@ -30,11 +31,12 @@ export class ProductResolver {
 
   @Query(() => productsPaginatedResult, { name: "products" })
   async getProducts(
+    @CurrentUser() user: User,
     @NormalizeGqlResolveInfo.RequestedPaths({ escapePaths: ["items"] })
     requestedPaths: INormalizedGqlRequestedPaths,
     @Args("pagination", { nullable: true }) pagination?: PaginationInput,
     @Args("filters", { nullable: true }) filters?: CatalogFiltersInput
   ): Promise<IPaginationResult<Product>> {
-    return this.productService.findAll(requestedPaths, pagination, filters);
+    return this.productService.findAll(user, requestedPaths, pagination, filters);
   }
 }

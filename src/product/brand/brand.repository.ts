@@ -12,12 +12,12 @@ export class BrandRepository extends BaseRepository<Brand> {
       .leftJoinAndSelect("brand.models", "model")
       .leftJoinAndSelect("product.categories", "category");
 
-    if (filters?.brands?.length) {
-      queryBuilder.andWhere(`brand.id IN (:brands)`, {
-        brands: filters.brands,
-      });
-    }
-
+    // if (filters?.brands?.length) {
+    //   queryBuilder.andWhere(`brand.id IN (:brands)`, {
+    //     brands: filters.brands,
+    //   });
+    // }
+    //
     if (filters?.models?.length) {
       queryBuilder.andWhere(`model.id IN (:models)`, {
         models: filters.models,
