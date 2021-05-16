@@ -13,6 +13,7 @@ import {AuthGuard} from "./common/guards";
 import {AnyExceptionFilter} from "./common/filters/exception.filter";
 import {ProductModule} from "./product/product.module";
 import {AuthMiddleware} from "./common/middlewares/auth.middleware";
+import {SettingModule} from "./setting/setting.module";
 
 @Module({
   providers: [
@@ -54,6 +55,7 @@ import {AuthMiddleware} from "./common/middlewares/auth.middleware";
     UserModule,
     TransferModule,
     ProductModule,
+    SettingModule
   ],
 })
 export class AppModule implements NestModule {

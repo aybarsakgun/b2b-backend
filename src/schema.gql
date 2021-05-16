@@ -168,6 +168,15 @@ type Product {
   currency: String!
 }
 
+type Setting {
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime
+  id: ID!
+  key: String!
+  value: String
+}
+
 type ProductPaginatedResult {
   total: Int
   totalPage: Int
@@ -185,6 +194,7 @@ type Query {
   brands(filters: CatalogFiltersInput): [Brand!]!
   categories(filters: CatalogFiltersInput): [Category!]!
   models(filters: CatalogFiltersInput): [Model!]!
+  settings: [Setting!]!
 }
 
 input PaginationInput {
