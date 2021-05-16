@@ -41,6 +41,10 @@ export class EnvConfig {
       // jwt
       JWT_SECRET: Joi.string().required(),
       JWT_EXPIRES_IN: Joi.string().required(),
+
+      // redis
+      REDIS_HOST: Joi.string().required(),
+      REDIS_PORT: Joi.number().required(),
     });
 
     const { error, value: validatedEnvConfig } = envVarsSchema.validate(env, {

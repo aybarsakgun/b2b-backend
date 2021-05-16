@@ -177,6 +177,17 @@ type Setting {
   value: String
 }
 
+type Currency {
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime
+  id: ID!
+  code: String!
+  name: String!
+  symbol: String!
+  exchangeRate: String!
+}
+
 type ProductPaginatedResult {
   total: Int
   totalPage: Int
@@ -195,6 +206,7 @@ type Query {
   categories(filters: CatalogFiltersInput): [Category!]!
   models(filters: CatalogFiltersInput): [Model!]!
   settings: [Setting!]!
+  currencies: [Currency!]!
 }
 
 input PaginationInput {

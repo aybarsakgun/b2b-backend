@@ -10,6 +10,8 @@ import { Category } from "../product/category/category.model";
 import { slugify } from "../common/utils/slugify";
 import {SettingDto} from "./dtos/setting.dto";
 import {Setting} from "../setting/setting.model";
+import {CurrencyDto} from "./dtos/currency.dto";
+import {Currency} from "../currency/currency.model";
 
 @Injectable()
 export class TransferService {
@@ -347,6 +349,39 @@ export class TransferService {
           })
         }
         await queryRunner.manager.save(setting);
+      }
+      await queryRunner.commitTransaction();
+    } catch (e) {
+      await queryRunner.rollbackTransaction();
+      throw new BadRequestException(e?.message);
+    } finally {
+      await queryRunner.release();
+    }
+    return true;
+  }
+
+  async importCurrencies(currencies: CurrencyDto[]) {
+    const queryRunner = this.connection.createQueryRunner();
+
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
+
+    try {
+      for (const currencyDto of currencies) {
+        let currency = await queryRunner.manager
+          .getRepository(Currency)
+          .findOne({ code: currencyDto.code });
+        if (currency) {
+          currency.exchangeRate = currencyDto.exchangeRate;
+        } else {
+          currency = new Currency({
+            code: currencyDto.code,
+            name: currencyDto.name,
+            symbol: currencyDto.symbol,
+            exchangeRate: currencyDto.exchangeRate
+          })
+        }
+        await queryRunner.manager.save(currency);
       }
       await queryRunner.commitTransaction();
     } catch (e) {
