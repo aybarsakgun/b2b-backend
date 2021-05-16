@@ -6,7 +6,7 @@ import {join} from "path";
 import {AuthModule} from "./auth/auth.module";
 import {env} from "./common/env";
 import typeOrmConfig from "./ormconfig";
-import {UsersModule} from "./users/users.module";
+import {UserModule} from "./users/user.module";
 import {TransferModule} from "./transfer/transfer.module";
 import {APP_FILTER, APP_GUARD, APP_PIPE} from "@nestjs/core";
 import {AuthGuard} from "./common/guards";
@@ -51,7 +51,7 @@ import {AuthMiddleware} from "./common/middlewares/auth.middleware";
       exclude: ["/auth/*", "/graphql"],
     }),
     AuthModule,
-    UsersModule,
+    UserModule,
     TransferModule,
     ProductModule,
   ],
