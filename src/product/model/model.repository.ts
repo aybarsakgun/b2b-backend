@@ -18,6 +18,12 @@ export class ModelRepository extends BaseRepository<Model> {
       });
     }
 
+    // if (filters?.models?.length) {
+    //   queryBuilder.andWhere(`model.id IN (:models)`, {
+    //     models: filters.models,
+    //   });
+    // }
+
     if (filters?.category) {
       queryBuilder.andWhere(`category.id = :category`, {
         category: filters.category,

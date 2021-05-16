@@ -1,27 +1,16 @@
-import {
-  CanActivate,
-  ExecutionContext,
-  Injectable,
-  UseGuards,
-} from "@nestjs/common";
-import { getRepository } from "typeorm";
-import { User, UserRole } from "../../users/user.model";
-import { getRequest } from "../utils/get-request";
+import {CanActivate, ExecutionContext, Injectable,} from "@nestjs/common";
+import {UserRole} from "../../users/user.model";
+import {getRequest} from "../utils/get-request";
 
 @Injectable()
-export class IsAdmin implements CanActivate {
-  async canActivate(context: ExecutionContext): Promise<boolean> {
+export class AdminGuard implements CanActivate {
+  canActivate(context: ExecutionContext): boolean {
     const req = getRequest(context);
-    const user: User = req.user;
 
-    if (!user) {
+    if (!req.user) {
       return false;
     }
 
-    const userRecord = await getRepository(User).findOne(user.id);
-
-    return userRecord.role === UserRole.ADMIN;
+    return req.user.role === UserRole.ADMIN;
   }
 }
-
-export const AdminGuard = () => UseGuards(IsAdmin);
