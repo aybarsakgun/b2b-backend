@@ -6,7 +6,7 @@ import {IPaginationResult} from "../modules/pagination/interfaces/pagination-res
 import {PaginationService} from "../modules/pagination/pagination.service";
 
 @Injectable()
-export class UsersService {
+export class UserService {
   constructor(
     private readonly userRepository: UserRepository,
     private paginationService: PaginationService
