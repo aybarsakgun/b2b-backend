@@ -4,6 +4,7 @@ import { TransferService } from "./transfer.service";
 import { Public } from "../common/decorators";
 import { ProductDto } from "./dtos/product.dto";
 import {SettingDto} from "./dtos/setting.dto";
+import {CurrencyDto} from "./dtos/currency.dto";
 
 // @AdminGuard()
 @Public()
@@ -54,5 +55,20 @@ export class TransferController {
       data: SettingDto[]
   ) {
     return this.transferService.importSettings(data);
+  }
+
+  @Post("currencies")
+  async importCurrencies(
+    @Body(
+      new ParseArrayPipe({
+        items: CurrencyDto,
+        transformOptions: {
+          enableImplicitConversion: true,
+        },
+      })
+    )
+      data: CurrencyDto[]
+  ) {
+    return this.transferService.importCurrencies(data);
   }
 }

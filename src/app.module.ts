@@ -14,6 +14,7 @@ import {AnyExceptionFilter} from "./common/filters/exception.filter";
 import {ProductModule} from "./product/product.module";
 import {AuthMiddleware} from "./common/middlewares/auth.middleware";
 import {SettingModule} from "./setting/setting.module";
+import {CurrencyModule} from "./currency/currency.module";
 
 @Module({
   providers: [
@@ -45,6 +46,10 @@ import {SettingModule} from "./setting/setting.module";
       introspection: true,
       playground: env.APP_ENV !== "prod",
       debug: env.APP_ENV !== "prod",
+      installSubscriptionHandlers: true,
+      subscriptions: {
+        keepAlive: 20000
+      },
       context: ({req, res}) => ({req, res}),
     }),
     ServeStaticModule.forRoot({
@@ -55,7 +60,8 @@ import {SettingModule} from "./setting/setting.module";
     UserModule,
     TransferModule,
     ProductModule,
-    SettingModule
+    SettingModule,
+    CurrencyModule
   ],
 })
 export class AppModule implements NestModule {

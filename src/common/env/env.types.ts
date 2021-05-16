@@ -13,4 +13,9 @@ export type EnvVariables = Readonly<{
   // jwt
   JWT_SECRET: string;
   JWT_EXPIRES_IN: string;
+
+  // redis
+
+  REDIS_HOST: string;
+  REDIS_PORT: number;
 }>;

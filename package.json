@@ -48,6 +48,8 @@
     "express": "^4.17.1",
     "express-rate-limit": "^5.2.6",
     "graphql": "^15.5.0",
+    "graphql-redis-subscriptions": "^2.4.0",
+    "graphql-subscriptions": "^1.2.1",
     "graphql-tools": "^7.0.4",
     "helmet": "^4.6.0",
     "jsonwebtoken": "^8.5.1",
