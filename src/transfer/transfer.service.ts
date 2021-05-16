@@ -8,6 +8,8 @@ import { CategoryDto, ProductDto } from "./dtos/product.dto";
 import { Model } from "../product/model/model.model";
 import { Category } from "../product/category/category.model";
 import { slugify } from "../common/utils/slugify";
+import {SettingDto} from "./dtos/setting.dto";
+import {Setting} from "../setting/setting.model";
 
 @Injectable()
 export class TransferService {
@@ -315,6 +317,37 @@ export class TransferService {
       productValues.length = 0;
       categoryValues.length = 0;
       productToCategoryValues.length = 0;
+      await queryRunner.commitTransaction();
+    } catch (e) {
+      await queryRunner.rollbackTransaction();
+      throw new BadRequestException(e?.message);
+    } finally {
+      await queryRunner.release();
+    }
+    return true;
+  }
+
+  async importSettings(settings: SettingDto[]) {
+    const queryRunner = this.connection.createQueryRunner();
+
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
+
+    try {
+      for (const settingDto of settings) {
+        let setting = await queryRunner.manager
+          .getRepository(Setting)
+          .findOne({ key: settingDto.key });
+        if (setting) {
+          setting.value = settingDto.value;
+        } else {
+          setting = new Setting({
+            key: settingDto.key,
+            value: settingDto.value
+          })
+        }
+        await queryRunner.manager.save(setting);
+      }
       await queryRunner.commitTransaction();
     } catch (e) {
       await queryRunner.rollbackTransaction();

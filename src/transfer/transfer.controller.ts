@@ -3,6 +3,7 @@ import { UserDto } from "./dtos/user.dto";
 import { TransferService } from "./transfer.service";
 import { Public } from "../common/decorators";
 import { ProductDto } from "./dtos/product.dto";
+import {SettingDto} from "./dtos/setting.dto";
 
 // @AdminGuard()
 @Public()
@@ -38,5 +39,20 @@ export class TransferController {
     data: ProductDto[]
   ) {
     return this.transferService.importProducts(data);
+  }
+
+  @Post("settings")
+  async importSettings(
+    @Body(
+      new ParseArrayPipe({
+        items: SettingDto,
+        transformOptions: {
+          enableImplicitConversion: true,
+        },
+      })
+    )
+      data: SettingDto[]
+  ) {
+    return this.transferService.importSettings(data);
   }
 }
