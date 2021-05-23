@@ -1,4 +1,4 @@
-import {Injectable} from "@nestjs/common";
+import {BadRequestException, Injectable} from "@nestjs/common";
 import {SettingRepository} from "./setting.repository";
 import {Setting} from "./setting.model";
 
@@ -10,6 +10,7 @@ export class SettingService {
   }
 
   async findAll(): Promise<Setting[]> {
+
     return this.settingRepository.find();
   }
 
