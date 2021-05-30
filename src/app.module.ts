@@ -1,4 +1,4 @@
-import {MiddlewareConsumer, Module, NestModule, RequestMethod, ValidationPipe} from "@nestjs/common";
+import {Module, ValidationPipe} from "@nestjs/common";
 import {GraphQLModule} from "@nestjs/graphql";
 import {ServeStaticModule} from "@nestjs/serve-static";
 import {TypeOrmModule} from "@nestjs/typeorm";
@@ -12,7 +12,6 @@ import {APP_FILTER, APP_GUARD, APP_PIPE} from "@nestjs/core";
 import {AuthGuard} from "./common/guards";
 import {AnyExceptionFilter} from "./common/filters/exception.filter";
 import {ProductModule} from "./product/product.module";
-import {AuthMiddleware} from "./common/middlewares/auth.middleware";
 import {SettingModule} from "./setting/setting.module";
 import {CurrencyModule} from "./currency/currency.module";
 
@@ -36,7 +35,7 @@ import {CurrencyModule} from "./currency/currency.module";
     },
     {
       provide: APP_GUARD,
-      useClass: AuthGuard,
+      useClass: AuthGuard
     }
   ],
   imports: [
@@ -64,10 +63,10 @@ import {CurrencyModule} from "./currency/currency.module";
     CurrencyModule
   ],
 })
-export class AppModule implements NestModule {
-  configure(consumer: MiddlewareConsumer) {
-    consumer
-      .apply(AuthMiddleware)
-      .forRoutes({path: '*', method: RequestMethod.ALL});
-  }
+export class AppModule {
+  // configure(consumer: MiddlewareConsumer) {
+  //   consumer
+  //     .apply(AuthMiddleware)
+  //     .forRoutes({path: '*', method: RequestMethod.ALL});
+  // }
 }

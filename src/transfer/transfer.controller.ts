@@ -1,13 +1,12 @@
-import { Body, Controller, ParseArrayPipe, Post } from "@nestjs/common";
-import { UserDto } from "./dtos/user.dto";
-import { TransferService } from "./transfer.service";
-import { Public } from "../common/decorators";
-import { ProductDto } from "./dtos/product.dto";
+import {Body, Controller, ParseArrayPipe, Post, UseGuards} from "@nestjs/common";
+import {UserDto} from "./dtos/user.dto";
+import {TransferService} from "./transfer.service";
+import {ProductDto} from "./dtos/product.dto";
 import {SettingDto} from "./dtos/setting.dto";
 import {CurrencyDto} from "./dtos/currency.dto";
+import {AdminGuard} from "../common/guards";
 
-// @AdminGuard()
-@Public()
+@UseGuards(AdminGuard)
 @Controller("api/transfer")
 export class TransferController {
   constructor(private transferService: TransferService) {}

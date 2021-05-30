@@ -1,4 +1,4 @@
-import {BadRequestException, Injectable} from "@nestjs/common";
+import {BadRequestException, Injectable, InternalServerErrorException} from "@nestjs/common";
 import {SettingRepository} from "./setting.repository";
 import {Setting} from "./setting.model";
 
@@ -10,7 +10,8 @@ export class SettingService {
   }
 
   async findAll(): Promise<Setting[]> {
-
+    // await new Promise(resolve => setTimeout(resolve, 2000));
+    // throw new InternalServerErrorException('500xd');
     return this.settingRepository.find();
   }
 

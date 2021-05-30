@@ -14,6 +14,7 @@ export class UserService {
   }
 
   async findById(id: number): Promise<User> {
+    console.log(id);
     if (!id) {
       throw new NotFoundException('USER.NOT_FOUND');
     }
