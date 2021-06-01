@@ -234,9 +234,15 @@ input CatalogFiltersInput {
 
 type Mutation {
   login(data: LoginInput!): LoginResult!
+  addItemToCart(data: AddItemToCartInput!): [Cart!]!
 }
 
 input LoginInput {
   username: String!
   password: String!
+}
+
+input AddItemToCartInput {
+  productId: Int!
+  quantity: Int
 }

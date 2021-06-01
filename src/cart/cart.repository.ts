@@ -1,13 +1,15 @@
-import {DeleteResult, EntityRepository, Repository} from "typeorm";
+import {DeleteResult, EntityRepository, SelectQueryBuilder} from "typeorm";
 import {Cart} from "./cart.model";
 import {User} from "../users/user.model";
+import {BaseRepository} from "../common/repositories/base.repository";
+import {INormalizedGqlRequestedPaths} from "../common/utils/normalize-gql-resolve-info";
 
 @EntityRepository(Cart)
-export class CartRepository extends Repository<Cart> {
-  async findCartItemsByUser(user: User): Promise<Cart[]> {
-    return this.createQueryBuilder('cart')
-      .where('cart.user = :user', {user: user.id})
-      .getMany();
+export class CartRepository extends BaseRepository<Cart> {
+  findCartItemsByUser(user: User, requestedPaths: INormalizedGqlRequestedPaths): SelectQueryBuilder<Cart> {
+    const queryBuilder = this.createQueryBuilder(requestedPaths.root)
+      .where(`${requestedPaths.root}.user = :user`, {user: user.id});
+    return this.getPopulatedQuery(requestedPaths, queryBuilder);
   }
 
   async deleteAllCartItemsByUser(user: User): Promise<DeleteResult> {
