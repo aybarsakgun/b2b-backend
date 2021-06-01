@@ -15,6 +15,7 @@ import {ProductModule} from "./product/product.module";
 import {AuthMiddleware} from "./common/middlewares/auth.middleware";
 import {SettingModule} from "./setting/setting.module";
 import {CurrencyModule} from "./currency/currency.module";
+import {CartModule} from "./cart/cart.module";
 
 @Module({
   providers: [
@@ -61,7 +62,8 @@ import {CurrencyModule} from "./currency/currency.module";
     TransferModule,
     ProductModule,
     SettingModule,
-    CurrencyModule
+    CurrencyModule,
+    CartModule
   ],
 })
 export class AppModule implements NestModule {

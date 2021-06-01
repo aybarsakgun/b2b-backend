@@ -196,6 +196,17 @@ type ProductPaginatedResult {
   items: [Product!]!
 }
 
+type Cart {
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime
+  id: ID!
+  quantity: Float!
+  product: Product!
+  user: User!
+  productUnit: ProductUnit!
+}
+
 type Query {
   user(id: ID!): User!
   currentUser: User!
@@ -207,6 +218,7 @@ type Query {
   models(filters: CatalogFiltersInput): [Model!]!
   settings: [Setting!]!
   currencies: [Currency!]!
+  cart: [Cart!]!
 }
 
 input PaginationInput {
