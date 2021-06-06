@@ -1,4 +1,4 @@
-import {MiddlewareConsumer, Module, NestModule, RequestMethod, ValidationPipe} from "@nestjs/common";
+import {Module, ValidationPipe} from "@nestjs/common";
 import {GraphQLModule} from "@nestjs/graphql";
 import {ServeStaticModule} from "@nestjs/serve-static";
 import {TypeOrmModule} from "@nestjs/typeorm";
@@ -8,14 +8,13 @@ import {env} from "./common/env";
 import typeOrmConfig from "./ormconfig";
 import {UserModule} from "./users/user.module";
 import {TransferModule} from "./transfer/transfer.module";
-import {APP_FILTER, APP_GUARD, APP_PIPE} from "@nestjs/core";
-import {AuthGuard} from "./common/guards";
+import {APP_FILTER, APP_GUARD, APP_PIPE, Reflector} from "@nestjs/core";
 import {AnyExceptionFilter} from "./common/filters/exception.filter";
 import {ProductModule} from "./product/product.module";
-import {AuthMiddleware} from "./common/middlewares/auth.middleware";
 import {SettingModule} from "./setting/setting.module";
 import {CurrencyModule} from "./currency/currency.module";
 import {CartModule} from "./cart/cart.module";
+import {JwtAuthGuard} from "./common/guards";
 
 @Module({
   providers: [
@@ -37,7 +36,8 @@ import {CartModule} from "./cart/cart.module";
     },
     {
       provide: APP_GUARD,
-      useClass: AuthGuard,
+      useFactory: ref => new JwtAuthGuard(ref),
+      inject: [Reflector]
     }
   ],
   imports: [
@@ -66,10 +66,5 @@ import {CartModule} from "./cart/cart.module";
     CartModule
   ],
 })
-export class AppModule implements NestModule {
-  configure(consumer: MiddlewareConsumer) {
-    consumer
-      .apply(AuthMiddleware)
-      .forRoutes({path: '*', method: RequestMethod.ALL});
-  }
+export class AppModule {
 }
