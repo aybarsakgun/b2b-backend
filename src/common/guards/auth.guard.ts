@@ -1,31 +1,33 @@
-import {CanActivate, ExecutionContext, Injectable, UnauthorizedException} from "@nestjs/common";
+import {ExecutionContext, Injectable, UnauthorizedException} from "@nestjs/common";
 import {Reflector} from "@nestjs/core";
+import {AuthGuard} from "@nestjs/passport";
 import {getRequest} from "../utils/get-request";
+import {TokenExpiredError} from "jsonwebtoken";
 
 @Injectable()
-export class AuthGuard implements CanActivate {
-  constructor(private reflector: Reflector) {
-
+export class JwtAuthGuard extends AuthGuard('jwt') {
+  constructor(private readonly reflector: Reflector) {
+    super();
   }
 
-  canActivate(
-    context: ExecutionContext
-  ): boolean {
-    const isPublic = this.reflector.getAllAndOverride<boolean>("public", [
+  getRequest(context: ExecutionContext) {
+    return getRequest(context);
+  }
+
+  handleRequest(err, user, info, context) {
+    const isPublic = this.reflector.getAllAndOverride<boolean>('public', [
       context.getHandler(),
       context.getClass(),
     ]);
-
+    if (user) {
+      return user;
+    }
     if (isPublic) {
       return true;
     }
-
-    const req = getRequest(context);
-
-    if (!req.user) {
-      throw new UnauthorizedException('MAIN.UNAUTHORIZED');
+    if (info instanceof TokenExpiredError) {
+      throw new TokenExpiredError('MAIN.TOKEN_EXPIRED', info.expiredAt);
     }
-
-    return true;
+    throw new UnauthorizedException('MAIN.UNAUTHORIZED');
   }
 }
