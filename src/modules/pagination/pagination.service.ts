@@ -11,7 +11,7 @@ export class PaginationService {
   async paginate<T>(
     queryBuilder: SelectQueryBuilder<T>,
     paginationInput: IPaginationInput,
-    manipulateFn?: (item: T) => T
+    manipulateFn?: (...params: any) => T
   ): Promise<IPaginationResult<T>> {
     const createPaginationResult = (
       total: number,

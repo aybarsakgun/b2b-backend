@@ -8,6 +8,7 @@ import { INormalizedGqlRequestedPaths } from "../common/utils/normalize-gql-reso
 import { ICatalogFilters } from "./interfaces/catalog-filters.interface";
 import {ProductPrice} from "./product-price/product-price.model";
 import {User} from "../users/user.model";
+import {ProductMapper} from "./product.mapper";
 
 @Injectable()
 export class ProductService {
@@ -38,19 +39,7 @@ export class ProductService {
     return this.paginationService.paginate<Product>(
       this.productRepository.findByFilters(filters, requestedPaths),
       paginationInput,
-      (item) => {
-        return {
-          ...item,
-          units: item.units?.map(unit => {
-            const defaultPriceOrder: number = user?.priceOrder || unit.defaultPriceOrder;
-            return {
-              ...unit,
-              defaultPriceOrder: defaultPriceOrder,
-              prices: unit.prices?.filter(price => price.priceOrder === defaultPriceOrder || price.priceOrder === unit.listPriceOrder) || []
-            }
-          }) || []
-        }
-      }
+      ProductMapper.mapByUser(user)
     );
   }
 }

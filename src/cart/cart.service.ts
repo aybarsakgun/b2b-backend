@@ -6,6 +6,8 @@ import {Product} from "../product/product.model";
 import {ProductRepository} from "../product/product.repository";
 import {AddItemToCartInput} from "./types/add-item-to-cart.input";
 import {INormalizedGqlRequestedPaths} from "../common/utils/normalize-gql-resolve-info";
+import {ProductMapper} from "../product/product.mapper";
+import {ProductUnitMapper} from "../product/product-unit/product-unit.mapper";
 
 @Injectable()
 export class CartService {
@@ -19,7 +21,12 @@ export class CartService {
     if (!user) {
       throw new UnauthorizedException('MAIN.UNAUTHORIZED');
     }
-    return await this.cartRepository.findCartItemsByUser(user, requestedPaths).getMany();
+    const cartItems = await this.cartRepository.findCartItemsByUser(user, requestedPaths).getMany();
+    return cartItems.map((item) => ({
+      ...item,
+      product: ProductMapper.mapByUser(user)(item.product),
+      productUnit: ProductUnitMapper.mapByUser(user)(item.productUnit)
+    }));
   }
 
   async addItemToCart({productId, quantity}: AddItemToCartInput, user: User, requestedPaths: INormalizedGqlRequestedPaths): Promise<Cart[]> {

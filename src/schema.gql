@@ -70,7 +70,6 @@ type ProductPrice {
   value: String!
   currency: String!
   priceOrder: Float!
-  unit: ProductUnit!
 }
 
 type ProductUnit {

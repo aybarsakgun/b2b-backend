@@ -22,8 +22,7 @@ export class ProductPrice extends BaseModel {
   @Field()
   @Column()
   priceOrder: number;
-
-  @Field(() => ProductUnit)
+  
   @ManyToOne(() => ProductUnit, (productUnit) => productUnit.prices)
   unit: ProductUnit;
 
