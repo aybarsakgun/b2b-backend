@@ -15,6 +15,7 @@ import {SettingModule} from "./setting/setting.module";
 import {CurrencyModule} from "./currency/currency.module";
 import {CartModule} from "./cart/cart.module";
 import {JwtAuthGuard} from "./common/guards";
+import {ImageModule} from "./image/image.module";
 
 @Module({
   providers: [
@@ -55,7 +56,7 @@ import {JwtAuthGuard} from "./common/guards";
     }),
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, "..", "..", "client", "build"),
-      exclude: ["/auth/*", "/graphql"],
+      exclude: ["/transfer/*", "/graphql", "/image/*"],
     }),
     AuthModule,
     UserModule,
@@ -63,7 +64,8 @@ import {JwtAuthGuard} from "./common/guards";
     ProductModule,
     SettingModule,
     CurrencyModule,
-    CartModule
+    CartModule,
+    ImageModule
   ],
 })
 export class AppModule {
