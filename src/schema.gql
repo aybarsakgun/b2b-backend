@@ -234,6 +234,8 @@ input CatalogFiltersInput {
 type Mutation {
   login(data: LoginInput!): LoginResult!
   addItemToCart(data: AddItemToCartInput!): [Cart!]!
+  removeItemFromCart(id: Int!): [Cart!]!
+  removeAllItemsFromCart: [Cart!]!
 }
 
 input LoginInput {
