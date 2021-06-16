@@ -1,4 +1,4 @@
-import {BadRequestException, Injectable, UnauthorizedException} from "@nestjs/common";
+import {BadRequestException, Injectable, InternalServerErrorException, UnauthorizedException} from "@nestjs/common";
 import {CartRepository} from "./cart.repository";
 import {Cart} from "./cart.model";
 import {User} from "../users/user.model";
@@ -38,14 +38,51 @@ export class CartService {
       throw new BadRequestException('CART.PRODUCT_NOT_FOUND');
     }
 
-    const cart = new Cart();
-    cart.product = product;
-    cart.productUnit = product.units.find(unit => unit.value === product.defaultUnit);
-    cart.quantity = quantity ? quantity : 1;
-    cart.user = user;
+    try {
+      const cart = new Cart();
+      cart.product = product;
+      cart.productUnit = product.units.find(unit => unit.value === product.defaultUnit);
+      cart.quantity = quantity ? quantity : 1;
+      cart.user = user;
 
-    await this.cartRepository.save(cart);
+      await this.cartRepository.save(cart);
+    } catch (e) {
+      throw new InternalServerErrorException('CART.COULD_NOT_SAVE_ITEM_TO_CART');
+    }
 
     return await this.getCart(user, requestedPaths);
+  }
+
+  async removeItemFromCart(id: number, user: User, requestedPaths: INormalizedGqlRequestedPaths): Promise<Cart[]> {
+    if (!user) {
+      throw new UnauthorizedException('MAIN.UNAUTHORIZED');
+    }
+
+    const cartItem: Cart = await this.cartRepository.findOne(id);
+    if (!cartItem) {
+      throw new BadRequestException('CART.CART_ITEM_NOT_FOUND');
+    }
+
+    try {
+      await this.cartRepository.remove(cartItem);
+    } catch (e) {
+      throw new InternalServerErrorException('CART.COULD_NOT_REMOVE_ITEM_FROM_CART');
+    }
+
+    return await this.getCart(user, requestedPaths);
+  }
+
+  async removeAllItemsFromCart(user: User): Promise<Cart[]> {
+    if (!user) {
+      throw new UnauthorizedException('MAIN.UNAUTHORIZED');
+    }
+
+    try {
+      await this.cartRepository.delete({user});
+    } catch (e) {
+      throw new InternalServerErrorException('CART.COULD_NOT_REMOVE_ALL_ITEMS_FROM_CART');
+    }
+
+    return [];
   }
 }
