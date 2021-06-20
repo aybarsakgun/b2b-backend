@@ -1,5 +1,5 @@
 import {Args, Int, Mutation, Query, Resolver} from "@nestjs/graphql";
-import {CurrentUser, Public} from "../common/decorators";
+import {CurrentUser} from "../common/decorators";
 import {CartService} from "./cart.service";
 import {Cart} from "./cart.model";
 import {User} from "../users/user.model";
@@ -7,7 +7,6 @@ import {AddItemToCartInput} from "./types/add-item-to-cart.input";
 import {INormalizedGqlRequestedPaths, NormalizeGqlResolveInfo} from "../common/utils/normalize-gql-resolve-info";
 
 @Resolver()
-@Public()
 export class CartResolver {
   constructor(private readonly cartService: CartService) {
   }
@@ -31,7 +30,7 @@ export class CartResolver {
 
   @Mutation(() => [Cart], {name: "removeItemFromCart"})
   async removeItemFromCart(
-    @Args('id', { type: () => Int }) id: number,
+    @Args('id', {type: () => Int}) id: number,
     @CurrentUser() user: User,
     @NormalizeGqlResolveInfo.RequestedPaths() requestedPaths: INormalizedGqlRequestedPaths,
   ): Promise<Cart[]> {
