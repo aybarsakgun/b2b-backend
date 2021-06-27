@@ -29,7 +29,7 @@ export class ProductUnit extends BaseModel {
   barcode?: string;
 
   @Field()
-  @Column()
+  @Column({select: false})
   defaultPriceOrder: number;
 
   @Field()
@@ -56,13 +56,20 @@ export class ProductUnit extends BaseModel {
   @Column({ type: "decimal", precision: 15, scale: 8, nullable: true })
   weight?: number;
 
-  @Field(() => Product)
   @ManyToOne(() => Product, (product) => product.units)
   product: Product;
 
   @Field(() => [ProductPrice])
   @OneToMany(() => ProductPrice, (productPrice) => productPrice.unit)
   prices: ProductPrice[];
+
+  @Field({ nullable: true })
+  @Column({length: 45, select: false, nullable: true})
+  defaultPrice?: string;
+
+  @Field({ nullable: true })
+  @Column({length: 45, select: false, nullable: true})
+  listPrice?: string;
 
   constructor(partial: Partial<ProductUnit> = {}) {
     super();
