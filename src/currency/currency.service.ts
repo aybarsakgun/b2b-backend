@@ -10,6 +10,10 @@ export class CurrencyService {
   }
 
   async findAll(): Promise<Currency[]> {
-    return this.currencyRepository.find();
+    return await this.currencyRepository.find();
+  }
+
+  async findByCode(code: string): Promise<Currency> {
+    return await this.currencyRepository.findOne({code});
   }
 }

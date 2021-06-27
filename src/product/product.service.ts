@@ -1,21 +1,22 @@
-import { Injectable } from "@nestjs/common";
-import { IPaginationInput } from "../modules/pagination/interfaces/pagination-input.interface";
-import { IPaginationResult } from "../modules/pagination/interfaces/pagination-result.interface";
-import { PaginationService } from "../modules/pagination/pagination.service";
-import { ProductRepository } from "./product.repository";
-import { Product } from "./product.model";
-import { INormalizedGqlRequestedPaths } from "../common/utils/normalize-gql-resolve-info";
-import { ICatalogFilters } from "./interfaces/catalog-filters.interface";
-import {ProductPrice} from "./product-price/product-price.model";
+import {Injectable} from "@nestjs/common";
+import {IPaginationInput} from "../modules/pagination/interfaces/pagination-input.interface";
+import {IPaginationResult} from "../modules/pagination/interfaces/pagination-result.interface";
+import {PaginationService} from "../modules/pagination/pagination.service";
+import {ProductRepository} from "./product.repository";
+import {Product} from "./product.model";
+import {INormalizedGqlRequestedPaths} from "../common/utils/normalize-gql-resolve-info";
+import {ICatalogFilters} from "./interfaces/catalog-filters.interface";
 import {User} from "../users/user.model";
-import {ProductMapper} from "./product.mapper";
+import {CurrencyService} from "../currency/currency.service";
 
 @Injectable()
 export class ProductService {
   constructor(
     private readonly productRepository: ProductRepository,
-    private paginationService: PaginationService
-  ) {}
+    private readonly paginationService: PaginationService,
+    private readonly currencyService: CurrencyService
+  ) {
+  }
 
   async findById(
     requestedPaths: INormalizedGqlRequestedPaths,
@@ -26,7 +27,7 @@ export class ProductService {
     }
     return await this.productRepository
       .getPopulatedQuery(requestedPaths)
-      .where(`${requestedPaths.root}.id = :id`, { id })
+      .where(`${requestedPaths.root}.id = :id`, {id})
       .getOne();
   }
 
@@ -36,10 +37,14 @@ export class ProductService {
     paginationInput: IPaginationInput,
     filters: ICatalogFilters
   ): Promise<IPaginationResult<Product>> {
+    let currency = null;
+    if (filters?.priceRange) {
+      currency = await this.currencyService.findByCode(filters.priceRange.currency);
+    }
     return this.paginationService.paginate<Product>(
-      this.productRepository.findByFilters(filters, requestedPaths),
+      this.productRepository.findByFilters(filters, requestedPaths, currency, user),
       paginationInput,
-      ProductMapper.mapByUser(user)
+      // ProductMapper.mapByUser(user)
     );
   }
 }

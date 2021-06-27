@@ -8,13 +8,14 @@ export abstract class BaseRepository<T> extends Repository<T> {
 
   getPopulatedQuery(
     requestedPaths: INormalizedGqlRequestedPaths,
-    queryBuilder?: SelectQueryBuilder<T>
+    queryBuilder?: SelectQueryBuilder<T>,
+    joinCondition?: (alias: string) => string
   ): SelectQueryBuilder<T> {
     const query = queryBuilder
       ? queryBuilder
       : this.createQueryBuilder(requestedPaths.root);
     requestedPaths.relations.forEach(([parent, child]) => {
-      query.leftJoinAndSelect(`${parent}.${child}`, `${parent}__${child}`);
+      query.leftJoinAndSelect(`${parent}.${child}`, `${parent}__${child}`, joinCondition ? joinCondition(parent + '__' + child) : undefined);
     });
     return query;
   }

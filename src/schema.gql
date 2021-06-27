@@ -86,8 +86,9 @@ type ProductUnit {
   width: Float
   height: Float
   weight: Float
-  product: Product!
   prices: [ProductPrice!]!
+  defaultPrice: String
+  listPrice: String
 }
 
 type Warehouse {
@@ -95,7 +96,6 @@ type Warehouse {
   updatedAt: DateTime!
   deletedAt: DateTime
   id: ID!
-  product: Product!
   quantity: String!
   warehouseId: Float!
   date: String!
@@ -215,8 +215,8 @@ type Query {
   brands(filters: CatalogFiltersInput): [Brand!]!
   categories(filters: CatalogFiltersInput): [Category!]!
   models(filters: CatalogFiltersInput): [Model!]!
-  settings: [Setting!]!
   currencies: [Currency!]!
+  settings: [Setting!]!
   cart: [Cart!]!
 }
 
@@ -229,6 +229,14 @@ input CatalogFiltersInput {
   brands: [ID!]
   models: [ID!]
   category: ID
+  priceRange: PriceRangeInput
+}
+
+input PriceRangeInput {
+  min: String
+  max: String
+  currency: String!
+  vatIncluded: Boolean = false
 }
 
 type Mutation {
