@@ -10,7 +10,6 @@ type SalesRepresentative {
   name: String
   phone: String
   email: String
-  users: [User!]!
 }
 
 """
@@ -79,16 +78,13 @@ type ProductUnit {
   id: ID!
   value: String!
   barcode: String
-  defaultPriceOrder: Float!
-  listPriceOrder: Float!
   multiplier: Float!
   length: Float
   width: Float
   height: Float
   weight: Float
-  prices: [ProductPrice!]!
-  defaultPrice: String
-  listPrice: String
+  defaultPrice: ProductPrice
+  listPrice: ProductPrice
 }
 
 type Warehouse {

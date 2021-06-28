@@ -5,6 +5,7 @@ import {INormalizedGqlRequestedPaths} from "../common/utils/normalize-gql-resolv
 import {Currency} from "../currency/currency.model";
 import {User} from "../users/user.model";
 import {ICatalogFilters} from "./interfaces/catalog-filters.interface";
+import {ProductUtil} from "./product.util";
 
 @EntityRepository(Product)
 export class ProductRepository extends BaseRepository<Product> {
@@ -59,56 +60,53 @@ export class ProductRepository extends BaseRepository<Product> {
       );
     }
 
-    const prepareJoinCondition = (alias: string): string | undefined => {
-      if (alias === requestedPaths.root + '__units__prices') {
-        return `${alias}.priceOrder = ${user?.priceOrder ?? requestedPaths.root + '__units.defaultPriceOrder'} OR ${alias}.priceOrder = ${requestedPaths.root + '__units.listPriceOrder'}`;
-      }
-    };
-
-    this.getPopulatedQuery(requestedPaths, queryBuilder, prepareJoinCondition);
-
-    if (!checkRelationRequested("units")) {
-      queryBuilder.leftJoinAndSelect(
-        `${requestedPaths.root}.units`,
-        `${requestedPaths.root}__units`
-      );
-    }
-    if (!checkRelationRequested("prices")) {
-      queryBuilder.leftJoinAndSelect(
-        `${requestedPaths.root}__units.prices`,
-        `${requestedPaths.root}__units__prices`
-      );
-    }
-
-    queryBuilder.addSelect(`(SELECT value FROM product_price WHERE product_price.unit_id = ${requestedPaths.root}__units.id AND product_price.price_order = ${user?.priceOrder ?? requestedPaths.root + '__units.defaultPriceOrder'})`, requestedPaths.root + '__units_default_price');
-    queryBuilder.addSelect(`(SELECT value FROM product_price WHERE product_price.unit_id = ${requestedPaths.root}__units.id AND product_price.price_order = ${requestedPaths.root + '__units.listPriceOrder'})`, requestedPaths.root + '__units_list_price');
-    queryBuilder.addSelect(`${user?.priceOrder ?? requestedPaths.root + '__units.default_price_order'}`, requestedPaths.root + '__units_default_price_order');
+    this.getPopulatedQuery(requestedPaths, queryBuilder, ProductUtil.fillJoinCondition(user));
 
     if (filters?.priceRange) {
+      if (!checkRelationRequested("units")) {
+        queryBuilder.leftJoinAndSelect(
+          `${requestedPaths.root}.units`,
+          `${requestedPaths.root}__units`
+        );
+      }
+      if (!checkRelationRequested("defaultPrice")) {
+        queryBuilder.leftJoinAndSelect(
+          `${requestedPaths.root}__units.prices`,
+          `${requestedPaths.root}__units__defaultPrice`,
+          ProductUtil.fillJoinCondition(user)(requestedPaths.root + '__units', 'defaultPrice')
+        );
+      }
+      if (!checkRelationRequested("listPrice")) {
+        queryBuilder.leftJoinAndSelect(
+          `${requestedPaths.root}__units.prices`,
+          `${requestedPaths.root}__units__listPrice`,
+          ProductUtil.fillJoinCondition(user)(requestedPaths.root + '__units', 'listPrice')
+        );
+      }
       queryBuilder.leftJoinAndSelect('currency',
         `currencies`,
-        `${requestedPaths.root}__units__prices.currency = currencies.code`
+        `${requestedPaths.root}__units__defaultPrice.currency = currencies.code`
       );
       const {min, max, vatIncluded} = filters.priceRange;
       if (max == null && parseFloat(min) > 0) {
-        queryBuilder.andHaving(`(${requestedPaths.root + '__units_default_price'} * currencies.exchangeRate) / (${currency.exchangeRate} * ((100 + ${vatIncluded ? requestedPaths.root + '.taxRate' : 0}) / 100)) >= :min`, {
+        queryBuilder.andWhere(`(${requestedPaths.root + '__units__defaultPrice'}.value * currencies.exchangeRate) / (${currency.exchangeRate} * ((100 + ${vatIncluded ? requestedPaths.root + '.taxRate' : 0}) / 100)) >= :min`, {
           min
         });
       } else if (min == null && parseFloat(max) > 0) {
-        queryBuilder.andHaving(`(${requestedPaths.root + '__units_default_price'} * currencies.exchangeRate) / (${currency.exchangeRate} * ((100 + ${vatIncluded ? requestedPaths.root + '.taxRate' : 0}) / 100)) <= :max`, {
+        queryBuilder.andWhere(`(${requestedPaths.root + '__units__defaultPrice'}.value * currencies.exchangeRate) / (${currency.exchangeRate} * ((100 + ${vatIncluded ? requestedPaths.root + '.taxRate' : 0}) / 100)) <= :max`, {
           max
         });
       } else if (parseFloat(min) > 0 && parseFloat(max) > 0) {
         queryBuilder
-          .andHaving(`(${requestedPaths.root + '__units_default_price'} * currencies.exchangeRate) / (${currency.exchangeRate} * ((100 + ${vatIncluded ? requestedPaths.root + '.taxRate' : 0}) / 100)) <= :max`, {
-            max
+          .andWhere(`(${requestedPaths.root + '__units__defaultPrice'}.value * currencies.exchangeRate) / (${currency.exchangeRate} * ((100 + ${vatIncluded ? requestedPaths.root + '.taxRate' : 0}) / 100)) <= :max`, {
+            max,
           })
-          .andHaving(`(${requestedPaths.root + '__units_default_price'} * currencies.exchangeRate) / (${currency.exchangeRate} * ((100 + ${vatIncluded ? requestedPaths.root + '.taxRate' : 0}) / 100)) >= :min`, {
+          .andWhere(`(${requestedPaths.root + '__units__defaultPrice'}.value * currencies.exchangeRate) / (${currency.exchangeRate} * ((100 + ${vatIncluded ? requestedPaths.root + '.taxRate' : 0}) / 100)) >= :min`, {
             min
           });
       }
     }
-
+    // throw new BadRequestException(queryBuilder.getSql());
     // queryBuilder.orderBy(`${requestedPaths.root + '__units_default_price'}`, 'ASC');
 
     return queryBuilder;
