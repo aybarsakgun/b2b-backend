@@ -25,7 +25,6 @@ export class SalesRepresentative
   @Column({ length: 50, default: null, nullable: true })
   email: string;
 
-  @Field(() => [User])
   @OneToMany(() => User, (User) => User.salesRepresentative, {
     orphanedRowAction: "delete",
   })

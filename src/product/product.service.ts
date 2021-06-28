@@ -25,7 +25,7 @@ export class ProductService {
     if (!id) {
       return null;
     }
-    return await this.productRepository
+    return this.productRepository
       .getPopulatedQuery(requestedPaths)
       .where(`${requestedPaths.root}.id = :id`, {id})
       .getOne();
@@ -43,8 +43,7 @@ export class ProductService {
     }
     return this.paginationService.paginate<Product>(
       this.productRepository.findByFilters(filters, requestedPaths, currency, user),
-      paginationInput,
-      // ProductMapper.mapByUser(user)
+      paginationInput
     );
   }
 }

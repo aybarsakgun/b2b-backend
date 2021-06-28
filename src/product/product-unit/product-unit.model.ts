@@ -1,16 +1,8 @@
-import { Field, ID, ObjectType } from "@nestjs/graphql";
-import {
-  Column,
-  Entity,
-  Index,
-  JoinColumn,
-  ManyToOne,
-  OneToMany,
-  PrimaryGeneratedColumn,
-} from "typeorm";
-import { ProductPrice } from "../product-price/product-price.model";
-import { Product } from "../product.model";
-import { BaseModel } from "../../common/models";
+import {Field, ID, ObjectType} from "@nestjs/graphql";
+import {Column, Entity, Index, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn,} from "typeorm";
+import {ProductPrice} from "../product-price/product-price.model";
+import {Product} from "../product.model";
+import {BaseModel} from "../../common/models";
 
 @ObjectType()
 @Entity()
@@ -28,11 +20,9 @@ export class ProductUnit extends BaseModel {
   @Column({ length: 45, nullable: true })
   barcode?: string;
 
-  @Field()
-  @Column({select: false})
+  @Column()
   defaultPriceOrder: number;
 
-  @Field()
   @Column()
   listPriceOrder: number;
 
@@ -59,17 +49,16 @@ export class ProductUnit extends BaseModel {
   @ManyToOne(() => Product, (product) => product.units)
   product: Product;
 
-  @Field(() => [ProductPrice])
   @OneToMany(() => ProductPrice, (productPrice) => productPrice.unit)
   prices: ProductPrice[];
 
-  @Field({ nullable: true })
-  @Column({length: 45, select: false, nullable: true})
-  defaultPrice?: string;
+  @Field(() => ProductPrice, { nullable: true })
+  @OneToOne(() => ProductPrice, (productPrice) => productPrice.unit)
+  defaultPrice?: ProductUnit;
 
-  @Field({ nullable: true })
-  @Column({length: 45, select: false, nullable: true})
-  listPrice?: string;
+  @Field(() => ProductPrice, { nullable: true })
+  @OneToOne(() => ProductPrice, (productPrice) => productPrice.unit)
+  listPrice?: ProductUnit;
 
   constructor(partial: Partial<ProductUnit> = {}) {
     super();
