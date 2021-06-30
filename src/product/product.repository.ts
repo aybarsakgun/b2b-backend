@@ -17,14 +17,8 @@ export class ProductRepository extends BaseRepository<Product> {
   ): SelectQueryBuilder<Product> {
     const queryBuilder = this.createQueryBuilder(requestedPaths.root);
 
-    const checkRelationRequested = (name: string): string[] => {
-      return requestedPaths.relations.find((relation) =>
-        relation.includes(name)
-      );
-    };
-
     if (filters?.brands?.length) {
-      if (!checkRelationRequested("brand")) {
+      if (!ProductUtil.isThisRelationRequested(requestedPaths, 'brand')) {
         queryBuilder.leftJoinAndSelect(
           `${requestedPaths.root}.brand`,
           `${requestedPaths.root}__brand`
@@ -36,7 +30,7 @@ export class ProductRepository extends BaseRepository<Product> {
     }
 
     if (filters?.models?.length) {
-      if (!checkRelationRequested("model")) {
+      if (!ProductUtil.isThisRelationRequested(requestedPaths, 'model')) {
         queryBuilder.leftJoinAndSelect(
           `${requestedPaths.root}.model`,
           `${requestedPaths.root}__model`
@@ -48,7 +42,7 @@ export class ProductRepository extends BaseRepository<Product> {
     }
 
     if (filters?.category) {
-      if (!checkRelationRequested("categories")) {
+      if (!ProductUtil.isThisRelationRequested(requestedPaths, 'categories')) {
         queryBuilder.leftJoinAndSelect(
           `${requestedPaths.root}.categories`,
           `${requestedPaths.root}__categories`
@@ -63,50 +57,16 @@ export class ProductRepository extends BaseRepository<Product> {
     this.getPopulatedQuery(requestedPaths, queryBuilder, ProductUtil.fillJoinCondition(user));
 
     if (filters?.priceRange) {
-      if (!checkRelationRequested("units")) {
-        queryBuilder.leftJoinAndSelect(
-          `${requestedPaths.root}.units`,
-          `${requestedPaths.root}__units`
-        );
-      }
-      if (!checkRelationRequested("defaultPrice")) {
-        queryBuilder.leftJoinAndSelect(
-          `${requestedPaths.root}__units.prices`,
-          `${requestedPaths.root}__units__defaultPrice`,
-          ProductUtil.fillJoinCondition(user)(requestedPaths.root + '__units', 'defaultPrice')
-        );
-      }
-      if (!checkRelationRequested("listPrice")) {
-        queryBuilder.leftJoinAndSelect(
-          `${requestedPaths.root}__units.prices`,
-          `${requestedPaths.root}__units__listPrice`,
-          ProductUtil.fillJoinCondition(user)(requestedPaths.root + '__units', 'listPrice')
-        );
-      }
-      queryBuilder.leftJoinAndSelect('currency',
-        `currencies`,
-        `${requestedPaths.root}__units__defaultPrice.currency = currencies.code`
+      ProductUtil.setPriceRangeFilter<Product>(
+        filters.priceRange,
+        queryBuilder,
+        requestedPaths.root,
+        user,
+        currency,
+        requestedPaths
       );
-      const {min, max, vatIncluded} = filters.priceRange;
-      if (max == null && parseFloat(min) > 0) {
-        queryBuilder.andWhere(`(${requestedPaths.root + '__units__defaultPrice'}.value * currencies.exchangeRate) / (${currency.exchangeRate} * ((100 + ${vatIncluded ? requestedPaths.root + '.taxRate' : 0}) / 100)) >= :min`, {
-          min
-        });
-      } else if (min == null && parseFloat(max) > 0) {
-        queryBuilder.andWhere(`(${requestedPaths.root + '__units__defaultPrice'}.value * currencies.exchangeRate) / (${currency.exchangeRate} * ((100 + ${vatIncluded ? requestedPaths.root + '.taxRate' : 0}) / 100)) <= :max`, {
-          max
-        });
-      } else if (parseFloat(min) > 0 && parseFloat(max) > 0) {
-        queryBuilder
-          .andWhere(`(${requestedPaths.root + '__units__defaultPrice'}.value * currencies.exchangeRate) / (${currency.exchangeRate} * ((100 + ${vatIncluded ? requestedPaths.root + '.taxRate' : 0}) / 100)) <= :max`, {
-            max,
-          })
-          .andWhere(`(${requestedPaths.root + '__units__defaultPrice'}.value * currencies.exchangeRate) / (${currency.exchangeRate} * ((100 + ${vatIncluded ? requestedPaths.root + '.taxRate' : 0}) / 100)) >= :min`, {
-            min
-          });
-      }
     }
-    // throw new BadRequestException(queryBuilder.getSql());
+
     // queryBuilder.orderBy(`${requestedPaths.root + '__units_default_price'}`, 'ASC');
 
     return queryBuilder;
