@@ -71,18 +71,15 @@ export class ProductRepository extends BaseRepository<Product> {
     }
 
     if (filters?.searchTerm) {
-        // queryBuilder.where(`${requestedPaths.root}.name LIKE "%${filters.searchTerm}%"`);
       const searchWords = filters.searchTerm.split(' ');
       searchWords.forEach((word, index) => {
-        queryBuilder.where(`${requestedPaths.root}.name LIKE :search${index} OR ${requestedPaths.root}.code LIKE :search${index} OR ${requestedPaths.root}.equivalentCode LIKE :search${index} OR ${requestedPaths.root}__units.barcode LIKE :search${index}`, {
-          ['search' + index]: `%${word}%`
+        queryBuilder.where(`${requestedPaths.root}.name LIKE :search_${index} OR ${requestedPaths.root}.code LIKE :search_${index} OR ${requestedPaths.root}.equivalentCode LIKE :search_${index} OR ${requestedPaths.root}__units.barcode LIKE :search_${index}`, {
+          ['search_' + index]: `%${word}%`
         });
       })
     }
 
     queryBuilder.orderBy(ProductUtil.generateSortingFieldString(requestedPaths.root, sorting.field), sorting.order);
-
-    // throw new BadRequestException(queryBuilder.getSql());
 
     return queryBuilder;
   }
