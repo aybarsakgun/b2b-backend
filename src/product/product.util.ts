@@ -93,4 +93,17 @@ export class ProductUtil {
         return productJoinAlias + '__brand.name';
     }
   };
+
+  static setSearchTermFilter = <T>(
+    searchTerm: string,
+    queryBuilder: SelectQueryBuilder<T>,
+    alias: string
+  ) => {
+    searchTerm.split(' ').forEach((word, index) => {
+      queryBuilder.andWhere(`${alias}.name LIKE :search_${index} OR ${alias}.code LIKE :search_${index} OR ${alias}.equivalentCode LIKE :search_${index} OR ${alias}__units.barcode LIKE :search_${index}`, {
+        ['search_' + index]: `%${word}%`
+      });
+    });
+    return queryBuilder;
+  };
 }
