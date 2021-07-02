@@ -9,6 +9,8 @@ import {GetProductArgs} from "./types/get-product.args";
 import {paginatedTypeCreator} from "../modules/pagination/utils/paginated-type-creator";
 import {User} from "../users/user.model";
 import {CatalogFiltersInput} from "./types/catalog-filters.input";
+import {CatalogSortingField, CatalogSortingInput} from "./types/catalog-sorting.input";
+import {SortingType} from "../common/enums/sorting-type.enum";
 
 const productsPaginatedResult = paginatedTypeCreator(Product);
 
@@ -33,8 +35,9 @@ export class ProductResolver {
     @NormalizeGqlResolveInfo.RequestedPaths({escapePaths: ["items"]})
       requestedPaths: INormalizedGqlRequestedPaths,
     @Args("pagination", {nullable: true}) pagination?: PaginationInput,
-    @Args("filters", {nullable: true}) filters?: CatalogFiltersInput
+    @Args("filters", {nullable: true}) filters?: CatalogFiltersInput,
+    @Args("sorting", {nullable: true, defaultValue: {field: CatalogSortingField.PRODUCT_NAME, order: SortingType.ASC}}) sorting?: CatalogSortingInput
   ): Promise<IPaginationResult<Product>> {
-    return this.productService.findAll(user, requestedPaths, pagination, filters);
+    return this.productService.findAll(user, requestedPaths, pagination, filters, sorting);
   }
 }

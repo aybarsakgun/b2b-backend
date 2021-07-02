@@ -5,4 +5,5 @@ export interface ICatalogFilters {
   models: number[];
   category: number;
   priceRange: IPriceRange;
+  searchTerm: string;
 }

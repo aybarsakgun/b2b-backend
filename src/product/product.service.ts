@@ -8,6 +8,7 @@ import {INormalizedGqlRequestedPaths} from "../common/utils/normalize-gql-resolv
 import {ICatalogFilters} from "./interfaces/catalog-filters.interface";
 import {User} from "../users/user.model";
 import {CurrencyService} from "../currency/currency.service";
+import {ICatalogSorting} from "./interfaces/catalog-sorting.interface";
 
 @Injectable()
 export class ProductService {
@@ -35,14 +36,15 @@ export class ProductService {
     user: User,
     requestedPaths: INormalizedGqlRequestedPaths,
     paginationInput: IPaginationInput,
-    filters: ICatalogFilters
+    filters: ICatalogFilters,
+    sorting: ICatalogSorting
   ): Promise<IPaginationResult<Product>> {
     let currency = null;
     if (filters?.priceRange) {
       currency = await this.currencyService.findByCode(filters.priceRange.currency);
     }
     return this.paginationService.paginate<Product>(
-      this.productRepository.findByFilters(filters, requestedPaths, currency, user),
+      this.productRepository.findByFilters(filters, sorting, requestedPaths, currency, user),
       paginationInput
     );
   }

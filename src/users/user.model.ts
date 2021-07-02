@@ -1,16 +1,9 @@
-import { Field, ID, ObjectType, registerEnumType } from "@nestjs/graphql";
-import {
-  Column,
-  Entity,
-  JoinTable,
-  ManyToOne,
-  OneToMany,
-  PrimaryGeneratedColumn,
-} from "typeorm";
-import { SalesRepresentative } from "./sales-representative/sales-representative.model";
-import { IUser } from "./interfaces/user.interface";
-import { BaseModel } from "../common/models";
-import { UserBranch } from "./user-branch/user-branch.model";
+import {Field, ID, ObjectType, registerEnumType} from "@nestjs/graphql";
+import {Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn,} from "typeorm";
+import {SalesRepresentative} from "./sales-representative/sales-representative.model";
+import {IUser} from "./interfaces/user.interface";
+import {BaseModel} from "../common/models";
+import {UserBranch} from "./user-branch/user-branch.model";
 
 export enum UserRole {
   ADMIN = "ADMIN",

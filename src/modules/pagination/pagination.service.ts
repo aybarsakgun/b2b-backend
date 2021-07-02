@@ -56,7 +56,7 @@ export class PaginationService {
           const val = (parameters[key] as string[]).join(",");
           query = query.replace(regexp(key), val);
         } else {
-          query = query.replace(regexp(key), parameters[key]);
+          query = query.replace(regexp(key), parameters[key].includes('%') ? `'${parameters[key]}'` : parameters[key]);
         }
       });
     }

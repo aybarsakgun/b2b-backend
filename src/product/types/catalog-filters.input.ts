@@ -22,4 +22,8 @@ export class CatalogFiltersInput {
   @Field(() => PriceRangeInput, {nullable: true})
   @IsOptional()
   priceRange: IPriceRange;
+
+  @Field({nullable: true})
+  @IsOptional()
+  searchTerm: string;
 }
