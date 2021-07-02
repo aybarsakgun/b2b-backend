@@ -1,4 +1,4 @@
-import {EntityRepository, SelectQueryBuilder} from "typeorm";
+import {EntityRepository, Like, SelectQueryBuilder} from "typeorm";
 import {Product} from "./product.model";
 import {BaseRepository} from "../common/repositories/base.repository";
 import {INormalizedGqlRequestedPaths} from "../common/utils/normalize-gql-resolve-info";
@@ -6,11 +6,14 @@ import {Currency} from "../currency/currency.model";
 import {User} from "../users/user.model";
 import {ICatalogFilters} from "./interfaces/catalog-filters.interface";
 import {ProductUtil} from "./product.util";
+import {ICatalogSorting} from "./interfaces/catalog-sorting.interface";
+import {BadRequestException} from "@nestjs/common";
 
 @EntityRepository(Product)
 export class ProductRepository extends BaseRepository<Product> {
   findByFilters(
     filters: ICatalogFilters,
+    sorting: ICatalogSorting,
     requestedPaths: INormalizedGqlRequestedPaths,
     currency: Currency,
     user: User
@@ -67,7 +70,19 @@ export class ProductRepository extends BaseRepository<Product> {
       );
     }
 
-    // queryBuilder.orderBy(`${requestedPaths.root + '__units_default_price'}`, 'ASC');
+    if (filters?.searchTerm) {
+        // queryBuilder.where(`${requestedPaths.root}.name LIKE "%${filters.searchTerm}%"`);
+      const searchWords = filters.searchTerm.split(' ');
+      searchWords.forEach((word, index) => {
+        queryBuilder.where(`${requestedPaths.root}.name LIKE :search${index} OR ${requestedPaths.root}.code LIKE :search${index} OR ${requestedPaths.root}.equivalentCode LIKE :search${index} OR ${requestedPaths.root}__units.barcode LIKE :search${index}`, {
+          ['search' + index]: `%${word}%`
+        });
+      })
+    }
+
+    queryBuilder.orderBy(ProductUtil.generateSortingFieldString(requestedPaths.root, sorting.field), sorting.order);
+
+    // throw new BadRequestException(queryBuilder.getSql());
 
     return queryBuilder;
   }

@@ -3,6 +3,7 @@ import {INormalizedGqlRequestedPaths} from "../common/utils/normalize-gql-resolv
 import {IPriceRange} from "../common/interfaces/price-range.interface";
 import {SelectQueryBuilder} from "typeorm";
 import {Currency} from "../currency/currency.model";
+import {CatalogSortingField} from "./types/catalog-sorting.input";
 
 export class ProductUtil {
   static fillJoinCondition = (user: User) => {
@@ -78,5 +79,18 @@ export class ProductUtil {
         });
     }
     return queryBuilder;
-  }
+  };
+
+  static generateSortingFieldString = (productJoinAlias: string, field: CatalogSortingField) => {
+    switch (field) {
+      case CatalogSortingField.PRODUCT_NAME:
+        return productJoinAlias + '.name';
+      case CatalogSortingField.PRODUCT_PRICE:
+        return productJoinAlias + '__units__defaultPrice.value';
+      case CatalogSortingField.PRODUCT_QUANTITY:
+        return productJoinAlias + '.quantity';
+      case CatalogSortingField.PRODUCT_BRAND:
+        return productJoinAlias + '__brand.name';
+    }
+  };
 }
