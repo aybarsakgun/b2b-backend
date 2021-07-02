@@ -49,6 +49,14 @@ export class BrandRepository extends BaseRepository<Brand> {
         );
       }
 
+      if (filters?.searchTerm) {
+        ProductUtil.setSearchTermFilter<Brand>(
+          filters.searchTerm,
+          queryBuilder,
+          'product'
+        );
+      }
+
       queryBuilder.groupBy(`${requestedPaths.root}.id`);
     }
 

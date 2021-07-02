@@ -28,16 +28,16 @@ export class CategoryRepository extends BaseRepository<Category> {
         queryBuilder
           .leftJoinAndSelect("product.brand", "brand")
           .andWhere(`brand.id IN (:brands)`, {
-          brands: filters.brands,
-        });
+            brands: filters.brands,
+          });
       }
 
       if (filters?.models?.length) {
         queryBuilder
           .leftJoinAndSelect("product.model", "model")
           .andWhere(`model.id IN (:models)`, {
-          models: filters.models,
-        });
+            models: filters.models,
+          });
       }
 
       if (filters?.category) {
@@ -55,6 +55,14 @@ export class CategoryRepository extends BaseRepository<Category> {
           'product',
           user,
           currency
+        );
+      }
+
+      if (filters?.searchTerm) {
+        ProductUtil.setSearchTermFilter<Category>(
+          filters.searchTerm,
+          queryBuilder,
+          'product'
         );
       }
 

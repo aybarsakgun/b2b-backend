@@ -49,6 +49,14 @@ export class ModelRepository extends BaseRepository<Model> {
         );
       }
 
+      if (filters?.searchTerm) {
+        ProductUtil.setSearchTermFilter<Model>(
+          filters.searchTerm,
+          queryBuilder,
+          'product'
+        );
+      }
+
       queryBuilder.groupBy(`${requestedPaths.root}.id`);
     }
 

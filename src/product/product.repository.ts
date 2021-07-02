@@ -71,12 +71,11 @@ export class ProductRepository extends BaseRepository<Product> {
     }
 
     if (filters?.searchTerm) {
-      const searchWords = filters.searchTerm.split(' ');
-      searchWords.forEach((word, index) => {
-        queryBuilder.where(`${requestedPaths.root}.name LIKE :search_${index} OR ${requestedPaths.root}.code LIKE :search_${index} OR ${requestedPaths.root}.equivalentCode LIKE :search_${index} OR ${requestedPaths.root}__units.barcode LIKE :search_${index}`, {
-          ['search_' + index]: `%${word}%`
-        });
-      })
+      ProductUtil.setSearchTermFilter<Product>(
+        filters.searchTerm,
+        queryBuilder,
+        requestedPaths.root
+      );
     }
 
     queryBuilder.orderBy(ProductUtil.generateSortingFieldString(requestedPaths.root, sorting.field), sorting.order);
