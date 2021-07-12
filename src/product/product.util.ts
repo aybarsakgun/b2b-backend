@@ -61,11 +61,11 @@ export class ProductUtil {
       `${alias}__units__defaultPrice.currency = currencies.code`
     );
     const {min, max, vatIncluded} = priceRangeFilter;
-    if (max == null && parseFloat(min) > 0) {
+    if (max == 'null' && parseFloat(min) > 0) {
       queryBuilder.andWhere(`(${alias + '__units__defaultPrice'}.value * currencies.exchangeRate) / (${currency.exchangeRate} * ((100 + ${vatIncluded ? alias + '.taxRate' : 0}) / 100)) >= :min`, {
         min
       });
-    } else if (min == null && parseFloat(max) > 0) {
+    } else if (min == 'null' && parseFloat(max) > 0) {
       queryBuilder.andWhere(`(${alias + '__units__defaultPrice'}.value * currencies.exchangeRate) / (${currency.exchangeRate} * ((100 + ${vatIncluded ? alias + '.taxRate' : 0}) / 100)) <= :max`, {
         max
       });
